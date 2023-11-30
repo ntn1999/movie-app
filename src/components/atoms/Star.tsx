@@ -1,12 +1,13 @@
 function Star({ star }: { star: number }) {
 	const maxStar: number = 5;
+	const numberStar: number = Math.ceil(star / 2);
 
 	return (
 		<>
 			{Array.from({ length: maxStar }).map((_: any, index: number) => (
 				<svg
 					key={index}
-					className={star >= ++index ? 'w-4 h-4 text-yellow-300' : 'w-4 h-4 text-gray-200'}
+					className={numberStar >= ++index ? 'w-4 h-4 text-yellow-300' : 'w-4 h-4 text-gray-200'}
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="currentColor"

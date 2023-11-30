@@ -1,4 +1,4 @@
-import { Rating, Star } from '../atoms';
+import { Rating, Star } from '@/components/atoms';
 
 function StarRating({ vote }: { vote: number }) {
 	return (

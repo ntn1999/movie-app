@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.9.7",
+		"@types/node": "^20.10.1",
 		"axios": "^1.6.2",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
@@ -19,6 +20,7 @@
 		"redux-saga": "^1.2.3"
 	},
 	"devDependencies": {
+		"@tailwindcss/forms": "^0.5.7",
 		"@types/react": "^18.2.37",
 		"@types/react-dom": "^18.2.15",
 		"@types/react-redux": "^7.1.31",

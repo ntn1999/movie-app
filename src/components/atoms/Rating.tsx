@@ -1,8 +1,8 @@
 function Rating({ rating }: { rating: number }) {
 	return (
-		<span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">
-			{rating}
-		</span>
+		<>
+			<p className="ms-1 text-sm font-medium text-gray-500">{(rating / 2).toFixed(2)} out of 5</p>
+		</>
 	);
 }
 

@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '../atoms';
-import { StarRating } from '../molecules';
-import { RootState } from '../../store';
+import { RootState } from '@/store';
+import { Button } from '@/components/atoms';
+import { StarRating } from '@/components/molecules';
 
 function MovieCard({ movieId }: { movieId: number }) {
 	const { movies } = useSelector((state: RootState) => state.app);
