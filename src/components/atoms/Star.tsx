@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 function Star({ star }: { star: number }) {
 	const maxStar: number = 5;
 	const numberStar: number = Math.ceil(star / 2);
@@ -20,4 +22,4 @@ function Star({ star }: { star: number }) {
 	);
 }
 
-export default Star;
+export default memo(Star);

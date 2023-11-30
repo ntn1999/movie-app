@@ -1,4 +1,5 @@
 import { Rating, Star } from '@/components/atoms';
+import { memo } from 'react';
 
 function StarRating({ vote }: { vote: number }) {
 	return (
@@ -9,4 +10,4 @@ function StarRating({ vote }: { vote: number }) {
 	);
 }
 
-export default StarRating;
+export default memo(StarRating);

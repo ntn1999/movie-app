@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 function Select() {
 	return (
 		<>
@@ -116,4 +118,4 @@ function Select() {
 	);
 }
 
-export default Select;
+export default memo(Select);

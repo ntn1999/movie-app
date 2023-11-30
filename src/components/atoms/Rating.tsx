@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 function Rating({ rating }: { rating: number }) {
 	return (
 		<>
@@ -6,4 +8,4 @@ function Rating({ rating }: { rating: number }) {
 	);
 }
 
-export default Rating;
+export default memo(Rating);

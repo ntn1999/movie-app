@@ -1,21 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: AppStateType = {
-	listMovies: {},
-	movies: [],
-};
+const listMovies = {} as IResponseMovies;
+const movies = [] as IMovies[];
+const movie = {} as IMovie;
 
 export const appSlice = createSlice({
 	name: 'app',
-	initialState,
+	initialState: {
+		listMovies,
+		movies,
+		movie,
+	},
 	reducers: {
-		setListMovies: (state, action: PayloadAction<any>) => {
+		setListMovies: (state, action: PayloadAction<IResponseMovies>) => {
 			state.listMovies = action.payload;
-			state.movies = action.payload.results;
+		},
+		setMovies: (state, action: PayloadAction<IMovies[]>) => {
+			state.movies = action.payload;
+		},
+		setMovie: (state, action: PayloadAction<IMovie>) => {
+			state.movie = action.payload;
 		},
 	},
 });
 
-export const { setListMovies } = appSlice.actions;
+export const { setListMovies, setMovies, setMovie } = appSlice.actions;
 
 export default appSlice.reducer;
