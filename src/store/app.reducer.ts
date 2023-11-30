@@ -1,20 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: AppStateType = {
-	inputValue: '',
-	status: 'Todo',
+	listMovies: {},
+	movies: [],
 };
 
 export const appSlice = createSlice({
 	name: 'app',
 	initialState,
 	reducers: {
-		setInputValue: (state, action: PayloadAction<string>) => {
-			state.inputValue = action.payload;
+		setListMovies: (state, action: PayloadAction<any>) => {
+			state.listMovies = action.payload;
+			state.movies = action.payload.results;
 		},
 	},
 });
 
-export const { setInputValue } = appSlice.actions;
+export const { setListMovies } = appSlice.actions;
 
 export default appSlice.reducer;

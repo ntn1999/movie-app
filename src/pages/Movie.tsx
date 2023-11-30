@@ -1,11 +1,12 @@
-import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 function Movie() {
-	const { id } = useParams();
+	const { movies } = useSelector((state: RootState) => state.app);
 
 	return (
 		<>
-			<h1>Movie detail {id}</h1>
+			<h1>Movie detail</h1>
 		</>
 	);
 }

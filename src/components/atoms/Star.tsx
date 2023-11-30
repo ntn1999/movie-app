@@ -6,7 +6,7 @@ function Star({ star }: { star: number }) {
 			{Array.from({ length: maxStar }).map((_: any, index: number) => (
 				<svg
 					key={index}
-					className={star >= ++index ? 'w-4 h-4 text-yellow-300' : 'w-4 h-4 text-gray-200 dark:text-gray-600'}
+					className={star >= ++index ? 'w-4 h-4 text-yellow-300' : 'w-4 h-4 text-gray-200'}
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="currentColor"
