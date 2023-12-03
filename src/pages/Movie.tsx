@@ -33,8 +33,8 @@ function Movie() {
 
 		return () => {
 			// Delete all state of the movie (in case movie details are cached)
-			// const defaultMovie = {} as TMovie;
-			// dispatch(setMovie(defaultMovie));
+			const defaultMovie = {} as TMovie;
+			dispatch(setMovie(defaultMovie));
 		};
 	}, []);
 
@@ -95,7 +95,11 @@ function Movie() {
 					{movie.credits?.cast
 						.map((cast: ICast, index: number) => (
 							<span key={index}>
-								<CharactorInfo name={cast.name} character={cast.character} profile_path={cast.profile_path} />
+								<CharactorInfo
+									name={cast.name}
+									character={cast.character}
+									profile_path={cast.profile_path}
+								/>
 							</span>
 						))
 						.slice(0, 15)}
