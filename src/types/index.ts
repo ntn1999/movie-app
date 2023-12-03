@@ -1,34 +1,24 @@
-type AppStateType = {
-	listMovies: IResponseMovies;
-	movies: IMovies[];
-	movie: IMovie;
-};
-
-type IMovies = {
+type ICast = {
+	adult: false;
+	gender: number;
 	id: number;
-	adult: boolean;
-	backdrop_path: string;
-	genre_ids: number[];
-	original_language: string;
-	original_title: string;
-	overview: string;
+	known_for_department: string;
+	name: string;
+	original_name: string;
 	popularity: number;
-	poster_path: string;
-	release_date: string;
-	title: string;
-	video: boolean;
-	vote_average: number;
-	vote_count: number;
+	profile_path: string;
+	cast_id: number;
+	character: string;
+	credit_id: string;
+	order: number;
 };
 
-type IResponseMovies = {
-	page: number;
-	results: IMovies[];
-	total_pages: number;
-	total_results: number;
+type TCrew = {
+	name: string;
+	known_for_department: string;
 };
 
-type IMovie = {
+type TMovie = {
 	adult: false;
 	backdrop_path: string;
 	belongs_to_collection: {
@@ -63,7 +53,7 @@ type IMovie = {
 			name: string;
 		},
 	];
-	release_date: Date;
+	release_date: string;
 	revenue: number;
 	runtime: number;
 	spoken_languages: [];
@@ -75,21 +65,30 @@ type IMovie = {
 	vote_count: number;
 	credits: {
 		cast: ICast[];
-		crew: [];
+		crew: TCrew[];
 	};
 };
 
-type ICast = {
-	adult: false;
-	gender: number;
+type TMovies = {
 	id: number;
-	known_for_department: string;
-	name: string;
-	original_name: string;
+	adult: boolean;
+	backdrop_path: string;
+	genre_ids: number[];
+	original_language: string;
+	original_title: string;
+	overview: string;
 	popularity: number;
-	profile_path: string;
-	cast_id: number;
-	character: string;
-	credit_id: string;
-	order: number;
+	poster_path: string;
+	release_date: string;
+	title: string;
+	video: boolean;
+	vote_average: number;
+	vote_count: number;
+};
+
+type IResponseMovies = {
+	page: number;
+	results: TMovies[];
+	total_pages: number;
+	total_results: number;
 };

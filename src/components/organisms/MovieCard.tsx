@@ -9,12 +9,12 @@ function MovieCard({ movie_id }: { movie_id: number }) {
 	const { movie } = useMovieHook(movie_id);
 
 	return (
-		<div className="max-w-xs bg-white border border-gray-200 rounded-lg shadow">
+		<div className="max-w-xs bg-slate-600 rounded-lg shadow">
 			<img className="pb-5 rounded-t-lg" src={import.meta.env.VITE_PREFIX_IMAGE + movie.poster_path} alt={movie.original_title} />
 
 			<div className="px-5 pb-5">
 				<Link to={`/movie/${movie_id}`}>
-					<h5 className="text-xl font-medium tracking-tight text-gray-900">{movie.original_title}</h5>
+					<h5 className="text-xl font-medium tracking-tight text-white h-14 hover:underline">{movie.original_title}</h5>
 				</Link>
 
 				<div className="flex items-center mt-2.5 mb-5">
@@ -23,8 +23,8 @@ function MovieCard({ movie_id }: { movie_id: number }) {
 					</div>
 				</div>
 				<div className="flex items-center justify-between">
-					<span className="text-2xl font-semibold text-gray-900">${movie.vote_count / 10}</span>
-					<Button text="Add to cart" />
+					<span className="text-2xl font-semibold text-white">${movie.vote_count / 10}</span>
+					<Button text="Add to cart" width="32" />
 				</div>
 			</div>
 		</div>

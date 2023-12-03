@@ -1,11 +1,23 @@
-import { memo } from 'react';
+type TButton = {
+	text: string;
+	size?: 'sm' | 'md' | 'lg';
+	color?: 'blue' | 'orange' | 'amber';
+	width?: '1' | '3' | '5' | '8' | '10' | '24' | '26' | '32' | '64' | '80';
+	height?: '1.5' | '2.5' | '3.5';
+	clickHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
 
-function Button({ text }: { text: string }) {
+function Button(props: TButton) {
 	return (
-		<button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-			{text}
+		<button
+			className={`text-white bg-${props.color ?? 'blue'}-500 hover:bg-${props.color ?? 'blue'}-600 focus:ring-2 focus:outline-none focus:ring-${
+				props.color ?? 'blue'
+			}-300 font-medium rounded-lg text-${props.size ?? 'sm'} w-${props.width ?? '40'} py-${props.height ?? '2.5'} text-center`}
+			onClick={props.clickHandler}
+		>
+			{props.text}
 		</button>
 	);
 }
 
-export default memo(Button);
+export default Button;
