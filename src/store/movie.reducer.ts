@@ -1,32 +1,52 @@
-import { ESearchValue } from '@/enums';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const listMovies = {} as IResponseMovies;
-const movies = [] as TMovies[];
+const listMovies = [] as TListMovies;
 const movie = {} as TMovie;
+const movieDetail = {} as TMovieDetail;
 
-export const appSlice = createSlice({
-	name: 'app',
+export const movieSlice = createSlice({
+	name: 'movie',
 	initialState: {
+		/**
+		 * FOR DISPLAY
+		 */
 		listMovies,
-		movies,
 		movie,
-		// search
+		movieDetail,
+
+		/**
+		 * FOR SEARCH
+		 */
 		searchInput: '',
 		searchPage: 1,
 		movieSearchQuery: '',
 		searchByType: 'movie',
 	},
 	reducers: {
-		setListMovies: (state, action: PayloadAction<IResponseMovies>) => {
+		/**
+		 * FOR DISPLAY
+		 */
+		setListMovies: (state, action: PayloadAction<TListMovies>) => {
 			state.listMovies = action.payload;
-		},
-		setMovies: (state, action: PayloadAction<TMovies[]>) => {
-			state.movies = action.payload;
 		},
 		setMovie: (state, action: PayloadAction<TMovie>) => {
 			state.movie = action.payload;
 		},
+		setMovieDetail: (state, action: PayloadAction<TMovieDetail>) => {
+			state.movieDetail = action.payload;
+		},
+
+		// CUSTOM ACTIONS...
+		setMovieIsInCartById: (state, action: PayloadAction<number>) => {
+			state.listMovies.forEach((movie: TMovie) => {
+				if (movie.id === action.payload) movie.isInCart = true;
+				else return;
+			});
+		},
+
+		/**
+		 * FOR SEARCH
+		 */
 		setSearchInput: (state, action: PayloadAction<string>) => {
 			state.searchInput = action.payload;
 		},
@@ -43,13 +63,23 @@ export const appSlice = createSlice({
 });
 
 export const {
+	/**
+	 * FOR DISPLAY
+	 */
 	setListMovies,
-	setMovies,
 	setMovie,
+	setMovieDetail,
+
+	// CUSTOM ACTIONS...
+	setMovieIsInCartById,
+
+	/**
+	 * FOR SEARCH
+	 */
 	setSearchInput,
 	setSearchPage,
 	setMovieSearchQuery,
 	setSearchByType,
-} = appSlice.actions;
+} = movieSlice.actions;
 
-export default appSlice.reducer;
+export default movieSlice.reducer;

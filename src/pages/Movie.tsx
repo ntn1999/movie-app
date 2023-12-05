@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { RootState } from '@/store';
-import { setMovie } from '@/store/app.reducer';
+import { setMovie } from '@/store/movie.reducer';
 import axiosClient from '@/api/axios.client';
 import { Button, Tag } from '@/components/atoms';
 import CatchError from '@/errors/catch.error';
 import { CharactorInfo } from '@/components/molecules';
 
 function Movie() {
-	const { movie } = useSelector((state: RootState) => state.app);
+	const { movie } = useSelector((state: RootState) => state.movie);
 	const { movie_id } = useParams<string>();
 	const dispatch = useDispatch();
 
@@ -33,8 +33,8 @@ function Movie() {
 
 		return () => {
 			// Delete all state of the movie (in case movie details are cached)
-			const defaultMovie = {} as TMovie;
-			dispatch(setMovie(defaultMovie));
+			// const defaultMovie = {} as TMovie;
+			// dispatch(setMovie(defaultMovie));
 		};
 	}, []);
 
@@ -43,7 +43,7 @@ function Movie() {
 			<section className="movie-detail">
 				<div className="movie-detail__left">
 					<img src={import.meta.env.VITE_PREFIX_IMAGE + movie.poster_path} alt={movie.title} />
-					<Button text="Buy now" size="lg" width="80" />
+					<Button text={movie.inCart ? 'In cart' : 'Buy now'} size="lg" width="80" />
 				</div>
 				<div className="movie-detail__right">
 					<article

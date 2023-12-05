@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import appReducer from '@/store/app.reducer';
+import movieReducer from '@/store/movie.reducer';
+import cartReducer from '@/store/cart.reducer';
 
 const store = configureStore({
 	reducer: {
-		app: appReducer,
+		movie: movieReducer,
+		cart: cartReducer,
 	},
 });
 

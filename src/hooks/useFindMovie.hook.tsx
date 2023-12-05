@@ -5,16 +5,16 @@ import { RootState } from '@/store';
 /**
  * find 1 movie in list by Id
  */
-function useMovieHook(movie_id: number | string | undefined): { movie: TMovies } {
-	const movies = useSelector((state: RootState) => state.app.movies);
+function useFindMovieHook(movie_id: number | string | undefined): { movie: TMovie } {
+	const listMovies: TListMovies = useSelector((state: RootState) => state.movie.listMovies);
 
 	// convert to number
 	const id: number | undefined = typeof movie_id === 'string' ? Number(movie_id) : movie_id;
 
 	// find movie in store by id
-	const movie: TMovies = movies.find((mov: TMovies) => mov.id === id)!;
+	const movie: TMovie = listMovies.find((movie: TMovie) => movie.id === id)!;
 
 	return { movie };
 }
 
-export default useMovieHook;
+export default useFindMovieHook;

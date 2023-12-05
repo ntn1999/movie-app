@@ -1,4 +1,26 @@
-type ICast = {
+type TResults = {
+	OK: '0';
+	NG: '1';
+};
+
+type TResponseDB<T> = {
+	results: TResults['OK' | 'NG'];
+	dataPart: T;
+	errorInfo?: {
+		errorItem: string | null;
+		messageId: string | null;
+		errorMessage: string;
+	};
+};
+
+type TCart = {
+	id?: number;
+	movie_id: number;
+};
+
+type TCarts = TCart[];
+
+type TCast = {
 	adult: false;
 	gender: number;
 	id: number;
@@ -18,8 +40,21 @@ type TCrew = {
 	known_for_department: string;
 };
 
-type TMovie = {
-	adult: false;
+type TPerson = {
+	adult: boolean;
+	gender: number;
+	id: number;
+	known_for_department: string;
+	name: string;
+	original_name: string;
+	popularity: number;
+	profile_path: string;
+	known_for: TMovieDetail[];
+};
+
+type TMovieDetail = {
+	inCart: boolean;
+	adult: boolean;
 	backdrop_path: string;
 	belongs_to_collection: {
 		id: number;
@@ -28,16 +63,10 @@ type TMovie = {
 		backdrop_path: string;
 	};
 	budget: number;
-	genres: [
-		{
-			id: number;
-			name: string;
-		},
-		{
-			id: number;
-			name: string;
-		},
-	];
+	genres: {
+		id: number;
+		name: string;
+	}[];
 	homepage: string;
 	id: number;
 	imdb_id: string;
@@ -64,12 +93,13 @@ type TMovie = {
 	vote_average: number;
 	vote_count: number;
 	credits: {
-		cast: ICast[];
+		cast: TCast[];
 		crew: TCrew[];
 	};
 };
 
-type TMovies = {
+type TMovie = {
+	isInCart: boolean;
 	id: number;
 	adult: boolean;
 	backdrop_path: string;
@@ -86,9 +116,10 @@ type TMovies = {
 	vote_count: number;
 };
 
-type IResponseMovies = {
+type TListMovies = TMovie[];
+
+type TResponseAPI = {
 	page: number;
-	results: TMovies[];
-	total_pages: number;
-	total_results: number;
+	results: TListMovies;
+	total: number;
 };

@@ -13,16 +13,16 @@ import '@/assets/main.css';
 import '@/assets/styles.scss';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<BrowserRouter>
-				<Routes>
-					<Route path="*" element={<Navigate replace to="/" />} />
-					<Route path="" Component={App} />
-					<Route path="movie/:movie_id" Component={Movie} />
-					<Route path="cart" Component={Cart} />
-				</Routes>
-			</BrowserRouter>
-		</Provider>
-	</React.StrictMode>,
+	// <React.StrictMode>
+	<Provider store={store}>
+		<BrowserRouter>
+			<Routes>
+				<Route path="*" element={<Navigate replace to="/" />} />
+				<Route path="" Component={App} />
+				<Route path="movie/:movie_id" Component={Movie} />
+				<Route path="cart" Component={Cart} />
+			</Routes>
+		</BrowserRouter>
+	</Provider>,
+	// </React.StrictMode>,
 );

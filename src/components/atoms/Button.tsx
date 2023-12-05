@@ -12,7 +12,7 @@ function Button(props: TButton) {
 	return (
 		<button
 			type={props.type ?? 'button'}
-			className={`text-white bg-${props.color ?? 'blue'}-500 hover:bg-${
+			className={`bg-${props.color ?? 'blue'}-500 hover:bg-${
 				props.color ?? 'blue'
 			}-600 focus:ring-2 focus:outline-none focus:ring-${props.color ?? 'blue'}-300 font-medium rounded-lg text-${
 				props.size ?? 'sm'

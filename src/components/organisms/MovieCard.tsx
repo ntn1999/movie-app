@@ -1,12 +1,39 @@
 import { memo } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios, { AxiosResponse } from 'axios';
 
 import { Button } from '@/components/atoms';
 import { StarRating } from '@/components/molecules';
-import useMovieHook from '@/hooks/useMovieId.hook';
+import useFindMovieHook from '@/hooks/useFindMovie.hook';
+import CatchError from '@/errors/catch.error';
+import { EResults } from '@/enums';
+import { setCarts } from '@/store/cart.reducer';
+import { setMovieIsInCartById } from '@/store/movie.reducer';
 
 function MovieCard({ movie_id }: { movie_id: number }) {
-	const { movie } = useMovieHook(movie_id);
+	const dispatch = useDispatch();
+	const { movie } = useFindMovieHook(movie_id);
+
+	const handleAddToCart = async () => {
+		try {
+			const response: AxiosResponse<TResponseDB<TCart>> = await axios.post(
+				`${import.meta.env.VITE_LOCAL_DB}/movies`,
+				{
+					movie_id: movie_id,
+				},
+			);
+			const { results, dataPart, errorInfo } = response.data;
+
+			if (results === EResults.OK) dispatch(setCarts({ movie_id: dataPart.movie_id }));
+			// set this movie is in cart
+			else if (results === EResults.NG) dispatch(setMovieIsInCartById(movie_id));
+			else window.alert(errorInfo?.errorMessage);
+		} catch (err: unknown) {
+			const { message } = new CatchError(err);
+			window.alert(`API FAIL: ${message}`);
+		}
+	};
 
 	return (
 		<div className="max-w-xs bg-slate-600 rounded-lg shadow">
@@ -30,7 +57,11 @@ function MovieCard({ movie_id }: { movie_id: number }) {
 				</div>
 				<div className="flex items-center justify-between">
 					<span className="text-2xl font-semibold text-white">${Math.floor(movie.popularity)}</span>
-					<Button text="Add to cart" width="32" />
+					<Button
+						text={movie.isInCart ? 'In cart' : 'Add to cart'}
+						width="32"
+						clickHandler={handleAddToCart}
+					/>
 				</div>
 			</div>
 		</div>

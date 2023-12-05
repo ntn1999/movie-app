@@ -1,21 +1,22 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios, { AxiosResponse } from 'axios';
 
-import { MovieCard, MovieFilter } from '@/components/organisms';
+import { Select } from '@/components/atoms';
+import { SearchInput } from '@/components/molecules';
+import { MovieCard } from '@/components/organisms';
 
 import axiosClient from '@/api/axios.client';
 import { RootState } from '@/store';
-import { setMovies, setSearchInput, setMovieSearchQuery, setSearchByType } from '@/store/app.reducer';
+import { setListMovies, setSearchInput, setMovieSearchQuery, setSearchByType } from '@/store/movie.reducer';
 import CatchError from '@/errors/catch.error';
-import { SearchInput } from '@/components/molecules';
-import { Select } from '@/components/atoms';
-import { ESearchValue } from '@/enums';
+import { EResults, ESearchValue } from '@/enums';
 
 function Home() {
-	const { movies, searchInput, searchPage, movieSearchQuery, searchByType } = useSelector(
-		(state: RootState) => state.app,
-	);
 	const dispatch = useDispatch();
+	const { listMovies, searchInput, searchPage, movieSearchQuery, searchByType } = useSelector(
+		(state: RootState) => state.movie,
+	);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		dispatch(setMovieSearchQuery(searchInput));
@@ -26,9 +27,28 @@ function Home() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const { data } = await axiosClient.get(`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`);
+				const responseAPI: AxiosResponse<TResponseAPI> = await axiosClient.get(
+					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
+				);
+				const responseDB: AxiosResponse<TResponseDB<TCarts>> = await axios.get(
+					`${import.meta.env.VITE_LOCAL_DB}/movies`,
+				);
+				const { results: resultsAPI } = responseAPI.data;
+				const { results: resultsDB, dataPart } = responseDB.data;
 
-				dispatch(setMovies(data.results));
+				if (resultsAPI && resultsDB === EResults.OK) {
+					resultsAPI.forEach((movie: TMovie) => {
+						// get all movie is saved in DB
+						const allMovieIdFromDB: number[] | [] = dataPart.map((cart: TCart) => cart.movie_id);
+
+						if (allMovieIdFromDB.includes(movie.id)) movie.isInCart = true;
+						else movie.isInCart = false;
+					});
+
+					dispatch(setListMovies(resultsAPI));
+				} else {
+					window.alert('Call API fail...');
+				}
 			} catch (err) {
 				const { message } = new CatchError(err);
 				window.alert(message);
@@ -40,14 +60,14 @@ function Home() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const { data } = await axiosClient.get(`/search/${searchByType}`, {
+				const response: AxiosResponse<TResponseAPI> = await axiosClient.get(`/search/${searchByType}`, {
 					params: {
 						query: searchInput,
 						page: searchPage,
 					},
 				});
-
-				dispatch(setMovies(searchByType === ESearchValue.PERSON ? data.results[0].known_for : data.results));
+				const { results } = response.data;
+				// dispatch(setListMovies(searchByType === ESearchValue.PERSON ? results[0].known_for : results));
 			} catch (err) {
 				const { message } = new CatchError(err);
 				window.alert(message);
@@ -61,11 +81,12 @@ function Home() {
 				<Select
 					label="Search by..."
 					options={[
+						{ value: ESearchValue.MULTI, text: 'All' },
 						{ value: ESearchValue.MOVIE, text: 'Movie' },
 						{ value: ESearchValue.KEYWORD, text: 'Keyword' },
-						{ value: ESearchValue.MOVIE, text: 'Actor / Actress' },
+						{ value: ESearchValue.PERSON, text: 'Actor / Actress' },
 					]}
-					changeHandler={(value: string) => setSearchByType(value)}
+					changeHandler={(value: string) => dispatch(setSearchByType(value))}
 				/>
 				<SearchInput
 					value={searchInput}
@@ -77,8 +98,8 @@ function Home() {
 
 			<main className="flex justify-center items-center">
 				<div className="grid grid-cols-3 gap-x-10 gap-y-20 place-items-center">
-					{movies.map((movies: TMovies, index: number) => (
-						<MovieCard key={index} movie_id={movies.id} />
+					{listMovies.map((movie: TMovie, index: number) => (
+						<MovieCard key={index} movie_id={movie.id} />
 					))}
 				</div>
 			</main>
