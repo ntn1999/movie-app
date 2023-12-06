@@ -1,22 +1,17 @@
 type TButton = {
 	text: string;
-	type?: 'button' | 'submit';
-	size?: 'sm' | 'md' | 'lg';
+	size?: 'small' | 'medium' | 'large';
 	color?: 'blue' | 'orange' | 'amber';
-	width?: '1' | '3' | '5' | '8' | '10' | '24' | '26' | '32' | '64' | '80';
-	height?: '1.5' | '2.5' | '3.5';
+	width?: 32 | 80;
 	clickHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 function Button(props: TButton) {
 	return (
 		<button
-			type={props.type ?? 'button'}
-			className={`bg-${props.color ?? 'blue'}-500 hover:bg-${
-				props.color ?? 'blue'
-			}-600 focus:ring-2 focus:outline-none focus:ring-${props.color ?? 'blue'}-300 font-medium rounded-lg text-${
-				props.size ?? 'sm'
-			} w-${props.width ?? '40'} py-${props.height ?? '2.5'} text-center`}
+			className={`w-${
+				props.width ?? '32'
+			} h-10 text-center bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm`}
 			onClick={props.clickHandler}
 		>
 			{props.text}

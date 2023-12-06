@@ -1,30 +1,31 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 import { RootState } from '@/store';
-import { setMovie } from '@/store/movie.reducer';
+import { setMovieDetail } from '@/store/movie.reducer';
 import axiosClient from '@/api/axios.client';
-import { Button, Tag } from '@/components/atoms';
+import { Button, Badge } from '@/components/atoms';
 import CatchError from '@/errors/catch.error';
 import { CharactorInfo } from '@/components/molecules';
 
 function Movie() {
-	const { movie } = useSelector((state: RootState) => state.movie);
-	const { movie_id } = useParams<string>();
 	const dispatch = useDispatch();
+	const { movie_id } = useParams<string>();
+	const { movieDetail } = useSelector((state: RootState) => state.movie);
 
 	useEffect(() => {
 		(async () => {
 			try {
-				const { data } = await axiosClient.get(`/movie/${movie_id}`, {
+				const response: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
 					params: {
 						// get actors information
 						append_to_response: 'credits',
 					},
 				});
 
-				dispatch(setMovie(data));
+				dispatch(setMovieDetail(response.data));
 			} catch (err: unknown) {
 				const { message } = new CatchError(err);
 				window.alert(message);
@@ -42,29 +43,36 @@ function Movie() {
 		<>
 			<section className="movie-detail">
 				<div className="movie-detail__left">
-					<img src={import.meta.env.VITE_PREFIX_IMAGE + movie.poster_path} alt={movie.title} />
-					<Button text={movie.inCart ? 'In cart' : 'Buy now'} size="lg" width="80" />
+					<img
+						src={import.meta.env.VITE_PREFIX_IMAGE + movieDetail.poster_path}
+						alt={movieDetail.title}
+						className="min-h-[30rem]"
+					/>
+					<Button text="Buy now" width={80} />
 				</div>
 				<div className="movie-detail__right">
 					<article
 						className="movie-detail__right-background-image"
-						style={{ backgroundImage: `url(${import.meta.env.VITE_PREFIX_IMAGE + movie.backdrop_path})` }}
+						style={{
+							backgroundImage: `url(${import.meta.env.VITE_PREFIX_IMAGE + movieDetail.backdrop_path})`,
+						}}
 					></article>
-					<div className="movie-detail__right-title">{movie.original_title}</div>
+					<div className="movie-detail__right-title">{movieDetail.original_title}</div>
 					<div className="movie-detail__right-rating">
+						<Badge name="IMDB" color={'amber'} width={4} height={2} />
 						<span className="imdb">IMDB</span>
-						<span className="vote">{movie.vote_average}</span>
+						<span className="vote">{movieDetail.vote_average}</span>
 					</div>
 					<span className="movie-detail__right-category">
-						{movie.genres?.map((genre, index: number) => (
+						{movieDetail.genres?.map((genre, index: number) => (
 							<div key={index} className="tags">
-								<Tag name={genre.name} />
+								<Badge name={genre.name} />
 							</div>
 						))}
 					</span>
 					<div className="movie-detail__right-description">
 						<div className="title">Overview</div>
-						<div className="overview">{movie.overview}</div>
+						<div className="overview">{movieDetail.overview}</div>
 					</div>
 					<table className="movie-detail__right-crew" cellSpacing={0} cellPadding={0}>
 						<tbody>
@@ -78,11 +86,11 @@ function Movie() {
 							</tr>
 							<tr>
 								<td>Country</td>
-								<td>{movie.production_countries?.map((country) => country.name)}</td>
+								<td>{movieDetail.production_countries?.map((country) => country.name)}</td>
 							</tr>
 							<tr>
 								<td>Release</td>
-								<td>{movie.release_date}</td>
+								<td>{movieDetail.release_date}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -92,8 +100,8 @@ function Movie() {
 			<div className="cast-information">
 				<div>Top Billed Cast</div>
 				<div className="cast-information__character">
-					{movie.credits?.cast
-						.map((cast: ICast, index: number) => (
+					{movieDetail.credits?.cast
+						.map((cast: TCast, index: number) => (
 							<span key={index}>
 								<CharactorInfo
 									name={cast.name}

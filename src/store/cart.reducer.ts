@@ -1,27 +1,21 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-const carts: TCart[] = [];
+const listMovieInCart = [] as TListMovies;
 
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
-		carts,
+		listMovieInCart,
 	},
 	reducers: {
 		/**
 		 * FOR CHECK IS MOVIE IN CART?
 		 */
-		setCarts: (state, action: PayloadAction<TCart>) => {
-			const found: TCart | undefined = state.carts.find(
-				(cart: TCart) => cart.movie_id === action.payload.movie_id,
-			);
-
-			// prevent set into state if existed
-			if (found) return;
-			else state.carts = [...state.carts, action.payload];
+		setListMovieInCart: (state, action: PayloadAction<TListMovies>) => {
+			state.listMovieInCart = action.payload;
 		},
 	},
 });
 
-export const { setCarts } = cartSlice.actions;
+export const { setListMovieInCart } = cartSlice.actions;
 export default cartSlice.reducer;

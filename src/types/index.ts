@@ -1,25 +1,3 @@
-type TResults = {
-	OK: '0';
-	NG: '1';
-};
-
-type TResponseDB<T> = {
-	results: TResults['OK' | 'NG'];
-	dataPart: T;
-	errorInfo?: {
-		errorItem: string | null;
-		messageId: string | null;
-		errorMessage: string;
-	};
-};
-
-type TCart = {
-	id?: number;
-	movie_id: number;
-};
-
-type TCarts = TCart[];
-
 type TCast = {
 	adult: false;
 	gender: number;
@@ -53,7 +31,7 @@ type TPerson = {
 };
 
 type TMovieDetail = {
-	inCart: boolean;
+	isInCart: boolean;
 	adult: boolean;
 	backdrop_path: string;
 	belongs_to_collection: {
@@ -118,8 +96,14 @@ type TMovie = {
 
 type TListMovies = TMovie[];
 
-type TResponseAPI = {
+type TResponseListMovies = {
 	page: number;
 	results: TListMovies;
 	total: number;
+};
+
+type TReponseWatchlist = {
+	success: boolean;
+	status_code: 1 | 12 | 13; // 1 for the first time add movie | 12 is updated | 13 is deleted
+	status_message: string;
 };

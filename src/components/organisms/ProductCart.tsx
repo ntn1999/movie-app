@@ -1,13 +1,15 @@
 type TProductCart = {
 	name: string;
 	price: number;
+	image: string;
+	clickHandler: () => void;
 };
 
 function ProductCart(props: TProductCart) {
 	return (
 		<li className="flex items-center gap-4">
 			<img
-				src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80"
+				src={import.meta.env.VITE_PREFIX_IMAGE + props.image}
 				alt=""
 				className="h-32 w-32 rounded object-cover"
 			/>
@@ -29,7 +31,7 @@ function ProductCart(props: TProductCart) {
 			</div>
 
 			<div className="flex flex-1 items-center justify-end gap-2">
-				<button className="text-gray-600 transition hover:text-red-600">
+				<button className="text-gray-600 transition hover:text-red-600" onClick={props.clickHandler}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const listMovies = [] as TListMovies;
 const movie = {} as TMovie;
-const movieDetail = {} as TMovieDetail;
+const movieDetail = {} as TMovieDetail; // when include "credits"
 
 export const movieSlice = createSlice({
 	name: 'movie',

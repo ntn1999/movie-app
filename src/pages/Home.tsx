@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 import { Select } from '@/components/atoms';
 import { SearchInput } from '@/components/molecules';
@@ -10,7 +10,7 @@ import axiosClient from '@/api/axios.client';
 import { RootState } from '@/store';
 import { setListMovies, setSearchInput, setMovieSearchQuery, setSearchByType } from '@/store/movie.reducer';
 import CatchError from '@/errors/catch.error';
-import { EResults, ESearchValue } from '@/enums';
+import { ESearchValue } from '@/enums';
 
 function Home() {
 	const dispatch = useDispatch();
@@ -27,28 +27,32 @@ function Home() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const responseAPI: AxiosResponse<TResponseAPI> = await axiosClient.get(
+				// get list Trending movie list in current week
+				const responseTrending: AxiosResponse<TResponseListMovies> = await axiosClient.get(
+					'/trending/movie/week',
+				);
+				// get list Watchlist movie (called in Cart)
+				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
 					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
 				);
-				const responseDB: AxiosResponse<TResponseDB<TCarts>> = await axios.get(
-					`${import.meta.env.VITE_LOCAL_DB}/movies`,
-				);
-				const { results: resultsAPI } = responseAPI.data;
-				const { results: resultsDB, dataPart } = responseDB.data;
 
-				if (resultsAPI && resultsDB === EResults.OK) {
-					resultsAPI.forEach((movie: TMovie) => {
-						// get all movie is saved in DB
-						const allMovieIdFromDB: number[] | [] = dataPart.map((cart: TCart) => cart.movie_id);
+				const { results: resultsTrending } = responseTrending.data;
+				const { results: resultsWatchlist } = responseWatchlist.data;
 
-						if (allMovieIdFromDB.includes(movie.id)) movie.isInCart = true;
+				if (resultsTrending && responseWatchlist) {
+					resultsTrending.forEach((movie: TMovie) => {
+						// get all id of movie in cart
+						const allMovieIdInWatchList: number[] = resultsWatchlist.map(
+							(watchlist: TMovie) => watchlist.id,
+						);
+
+						if (allMovieIdInWatchList.includes(movie.id)) movie.isInCart = true;
 						else movie.isInCart = false;
 					});
 
-					dispatch(setListMovies(resultsAPI));
-				} else {
-					window.alert('Call API fail...');
-				}
+					// save all movie was changed
+					dispatch(setListMovies(resultsTrending));
+				} else throw Error('Call API fail...');
 			} catch (err) {
 				const { message } = new CatchError(err);
 				window.alert(message);
@@ -60,7 +64,7 @@ function Home() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const response: AxiosResponse<TResponseAPI> = await axiosClient.get(`/search/${searchByType}`, {
+				const response: AxiosResponse<TResponseListMovies> = await axiosClient.get(`/search/${searchByType}`, {
 					params: {
 						query: searchInput,
 						page: searchPage,

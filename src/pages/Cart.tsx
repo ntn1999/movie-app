@@ -1,6 +1,66 @@
+import { useEffect, useState } from 'react';
 import { ProductCart } from '@/components/organisms';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { setListMovieInCart } from '@/store/cart.reducer';
+import CatchError from '@/errors/catch.error';
+import { AxiosResponse } from 'axios';
+import axiosClient from '@/api/axios.client';
+import { EStatusWatchlist } from '@/enums';
 
 function Cart() {
+	const [removeMovieById, setRemoveMovieById] = useState<number>();
+	const dispatch = useDispatch();
+	const { listMovieInCart } = useSelector((state: RootState) => state.cart);
+
+	// get movie detail
+	useEffect(() => {
+		(async () => {
+			try {
+				const response: AxiosResponse<TResponseListMovies> = await axiosClient.get(
+					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
+				);
+				const { results } = response.data;
+
+				if (results) dispatch(setListMovieInCart(results));
+				else throw Error('Get movie detail fail...');
+			} catch (err) {
+				const { message } = new CatchError(err);
+				console.log(message);
+			}
+		})();
+	}, [removeMovieById]);
+
+	/**
+	 * REMOVE MOVIE IN WATCH LIST BY MOVIE ID
+	 * @param movie_id - id of movie for remove
+	 */
+	const handleRemoveMovie = async (movie_id: number) => {
+		try {
+			const response: AxiosResponse<TReponseWatchlist> = await axiosClient.post(
+				`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist`,
+				{
+					media_type: 'movie',
+					media_id: movie_id,
+					watchlist: false, // FOR REMOVE
+				},
+			);
+
+			// update local state to re-render list movie
+			setRemoveMovieById(movie_id);
+
+			const { status_code, status_message } = response.data;
+
+			if (status_code === EStatusWatchlist.ADDED) return status_message;
+			else if (status_code === EStatusWatchlist.REMOVED) return status_message;
+			else throw Error('Watchlist fail...');
+		} catch (err) {
+			const { message } = new CatchError(err);
+			window.alert(message);
+		}
+	};
+
 	return (
 		<section className="bg-white">
 			<div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -11,11 +71,15 @@ function Cart() {
 
 					<div className="mt-8">
 						<ul className="space-y-4">
-							<ProductCart name="Captain" price={100} />
-							<ProductCart name="Captain" price={100} />
-							<ProductCart name="Captain" price={100} />
-							<ProductCart name="Captain" price={100} />
-							<ProductCart name="Captain" price={100} />
+							{listMovieInCart.map((movieCart: TMovie, index: number) => (
+								<ProductCart
+									key={index}
+									name={movieCart.original_title}
+									image={movieCart.backdrop_path}
+									price={Math.floor(movieCart.popularity)}
+									clickHandler={() => handleRemoveMovie(movieCart.id)}
+								/>
+							))}
 						</ul>
 
 						<div className="mt-8 flex justify-end border-t border-gray-100 pt-8">

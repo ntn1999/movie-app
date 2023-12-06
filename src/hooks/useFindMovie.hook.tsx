@@ -12,7 +12,7 @@ function useFindMovieHook(movie_id: number | string | undefined): { movie: TMovi
 	const id: number | undefined = typeof movie_id === 'string' ? Number(movie_id) : movie_id;
 
 	// find movie in store by id
-	const movie: TMovie = listMovies.find((movie: TMovie) => movie.id === id)!;
+	const movie: TMovie = listMovies.find((movie) => movie.id === id)!;
 
 	return { movie };
 }
