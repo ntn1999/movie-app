@@ -2,26 +2,15 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AxiosResponse } from 'axios';
 
-import { Select } from '@/components/atoms';
-import { SearchInput } from '@/components/molecules';
-import { MovieCard } from '@/components/organisms';
-
 import axiosClient from '@/api/axios.client';
-import { RootState } from '@/store';
-import { setListMovies, setSearchInput, setMovieSearchQuery, setSearchByType } from '@/store/movie.reducer';
+import store, { RootState } from '@/store';
+import { setListMovies, setListMovieByGenres } from '@/store/movie.reducer';
 import CatchError from '@/errors/catch.error';
-import { ESearchValue } from '@/enums';
+import { MovieGenres } from '@/components/organisms';
 
 function Home() {
 	const dispatch = useDispatch();
-	const { listMovies, searchInput, searchPage, movieSearchQuery, searchByType } = useSelector(
-		(state: RootState) => state.movie,
-	);
-
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		dispatch(setMovieSearchQuery(searchInput));
-		e.preventDefault();
-	};
+	const { listMovies, listMovieByGenres } = useSelector((state: RootState) => state.movie);
 
 	// default input
 	useEffect(() => {
@@ -31,6 +20,8 @@ function Home() {
 				const responseTrending: AxiosResponse<TResponseListMovies> = await axiosClient.get(
 					'/trending/movie/week',
 				);
+				// get list of film genres
+				const responseGenres: AxiosResponse<TResponseGenres> = await axiosClient.get('/genre/movie/list');
 				// get list Watchlist movie (called in Cart)
 				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
 					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
@@ -38,8 +29,9 @@ function Home() {
 
 				const { results: resultsTrending } = responseTrending.data;
 				const { results: resultsWatchlist } = responseWatchlist.data;
+				const { genres } = responseGenres.data;
 
-				if (resultsTrending && responseWatchlist) {
+				if (resultsTrending && responseWatchlist && genres) {
 					resultsTrending.forEach((movie: TMovie) => {
 						// get all id of movie in cart
 						const allMovieIdInWatchList: number[] = resultsWatchlist.map(
@@ -52,6 +44,28 @@ function Home() {
 
 					// save all movie was changed
 					dispatch(setListMovies(resultsTrending));
+
+					// fetch each
+					const storeMovies: TMovieGenres[] = [];
+					// decrease total API call
+					genres.slice(0, 10);
+
+					for await (const genre of genres) {
+						const response: AxiosResponse<TResponseListMovies> = await axiosClient.get('/discover/movie', {
+							params: {
+								with_genres: genre.id,
+								sort_by: 'popularity.desc',
+							},
+						});
+						const { results } = response.data;
+
+						storeMovies.push({
+							genre: genre.name,
+							movies: results,
+						});
+					}
+					// save list movie
+					dispatch(setListMovieByGenres(storeMovies));
 				} else throw Error('Call API fail...');
 			} catch (err) {
 				const { message } = new CatchError(err);
@@ -60,53 +74,12 @@ function Home() {
 		})();
 	}, []);
 
-	// Search by keyword
-	useEffect(() => {
-		(async () => {
-			try {
-				const response: AxiosResponse<TResponseListMovies> = await axiosClient.get(`/search/${searchByType}`, {
-					params: {
-						query: searchInput,
-						page: searchPage,
-					},
-				});
-				const { results } = response.data;
-				// dispatch(setListMovies(searchByType === ESearchValue.PERSON ? results[0].known_for : results));
-			} catch (err) {
-				const { message } = new CatchError(err);
-				window.alert(message);
-			}
-		})();
-	}, [movieSearchQuery]);
-
 	return (
 		<>
-			<div className="flex justify-center items-center m-10">
-				<Select
-					label="Search by..."
-					options={[
-						{ value: ESearchValue.MULTI, text: 'All' },
-						{ value: ESearchValue.MOVIE, text: 'Movie' },
-						{ value: ESearchValue.KEYWORD, text: 'Keyword' },
-						{ value: ESearchValue.PERSON, text: 'Actor / Actress' },
-					]}
-					changeHandler={(value: string) => dispatch(setSearchByType(value))}
-				/>
-				<SearchInput
-					value={searchInput}
-					placeHolder="Search movie..."
-					changeHandler={(value) => dispatch(setSearchInput(value))}
-					submitHandler={handleSubmit}
-				/>
-			</div>
-
-			<main className="flex justify-center items-center">
-				<div className="grid grid-cols-3 gap-x-10 gap-y-20 place-items-center">
-					{listMovies.map((movie: TMovie, index: number) => (
-						<MovieCard key={index} movie_id={movie.id} />
-					))}
-				</div>
-			</main>
+			<MovieGenres genre="Trending" movies={listMovies} maxDisplay={4} />
+			{listMovieByGenres.map((movie: TMovieGenres, index: number) => (
+				<MovieGenres key={index} genre={movie.genre} movies={movie.movies} maxDisplay={4} />
+			))}
 		</>
 	);
 }

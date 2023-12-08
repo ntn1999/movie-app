@@ -41,10 +41,7 @@ type TMovieDetail = {
 		backdrop_path: string;
 	};
 	budget: number;
-	genres: {
-		id: number;
-		name: string;
-	}[];
+	genres: TGenres[];
 	homepage: string;
 	id: number;
 	imdb_id: string;
@@ -106,4 +103,18 @@ type TReponseWatchlist = {
 	success: boolean;
 	status_code: 1 | 12 | 13; // 1 for the first time add movie | 12 is updated | 13 is deleted
 	status_message: string;
+};
+
+type TGenres = {
+	id: number;
+	name: string;
+};
+
+type TResponseGenres = {
+	genres: TGenres[];
+};
+
+type TMovieGenres = {
+	genre: string;
+	movies: TListMovies;
 };

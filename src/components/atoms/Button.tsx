@@ -3,7 +3,7 @@ type TButton = {
 	size?: 'small' | 'medium' | 'large';
 	color?: 'blue' | 'orange' | 'amber';
 	width?: 32 | 80;
-	clickHandler?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 function Button(props: TButton) {
@@ -12,7 +12,7 @@ function Button(props: TButton) {
 			className={`w-${
 				props.width ?? '32'
 			} h-10 text-center bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm`}
-			onClick={props.clickHandler}
+			onClick={props.onClick}
 		>
 			{props.text}
 		</button>

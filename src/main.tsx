@@ -7,6 +7,7 @@ import store from '@/store';
 import App from '@/App.tsx';
 import Cart from '@/pages/Cart';
 import Movie from '@/pages/Movie.tsx';
+import { Footer, Header } from '@/components/templates';
 
 // tailwindcss
 import '@/assets/main.css';
@@ -15,6 +16,7 @@ import '@/assets/styles.scss';
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	// <React.StrictMode>
 	<Provider store={store}>
+		<Header />
 		<BrowserRouter>
 			<Routes>
 				<Route path="*" element={<Navigate replace to="/" />} />
@@ -23,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				<Route path="cart" Component={Cart} />
 			</Routes>
 		</BrowserRouter>
+		<Footer />
 	</Provider>,
 	// </React.StrictMode>,
 );

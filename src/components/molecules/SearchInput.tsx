@@ -4,7 +4,7 @@ type TSearchInput = {
 	value: string;
 	placeHolder?: string;
 	type?: 'text' | 'number' | 'email';
-	changeHandler: (e: string) => void;
+	onChange: (e: string) => void;
 	submitHandler: (e: any) => void;
 };
 
@@ -36,7 +36,7 @@ function SearchInput(props: TSearchInput) {
 					value={props.value}
 					type={props.type}
 					placeHolder={props.placeHolder}
-					changeHandler={props.changeHandler}
+					onChange={props.onChange}
 				/>
 				<button
 					type="submit"

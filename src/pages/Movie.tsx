@@ -6,9 +6,8 @@ import { AxiosResponse } from 'axios';
 import { RootState } from '@/store';
 import { setMovieDetail } from '@/store/movie.reducer';
 import axiosClient from '@/api/axios.client';
-import { Button, Badge } from '@/components/atoms';
+import { Button, Badge, Character } from '@/components/atoms';
 import CatchError from '@/errors/catch.error';
-import { CharactorInfo } from '@/components/molecules';
 
 function Movie() {
 	const dispatch = useDispatch();
@@ -103,7 +102,7 @@ function Movie() {
 					{movieDetail.credits?.cast
 						.map((cast: TCast, index: number) => (
 							<span key={index}>
-								<CharactorInfo
+								<Character
 									name={cast.name}
 									character={cast.character}
 									profile_path={cast.profile_path}

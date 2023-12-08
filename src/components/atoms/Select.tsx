@@ -5,10 +5,10 @@ type TSelect = {
 	width?: '28' | '32' | '40' | '52';
 	defaultValue?: string;
 	options: {
-		value: string;
+		value: string | number;
 		text: string;
 	}[];
-	changeHandler?: (e: string) => void;
+	onChange?: (e: string) => void;
 };
 
 function Select(props: TSelect) {
@@ -23,9 +23,7 @@ function Select(props: TSelect) {
 				className={`h-10 w-${
 					props.width ?? '52'
 				} border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-				onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-					props.changeHandler && props.changeHandler(e.target.value)
-				}
+				onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.onChange && props.onChange(e.target.value)}
 			>
 				{/* {(props.default ?? true) && <option defaultValue={'All'}>- All -</option>} */}
 				{props.options.map((option, index: number) => (

@@ -1,8 +1,11 @@
+import { Link } from 'react-router-dom';
+
 type TProductCart = {
+	id: number;
 	name: string;
 	price: number;
 	image: string;
-	clickHandler: () => void;
+	onClick: () => void;
 };
 
 function ProductCart(props: TProductCart) {
@@ -10,35 +13,31 @@ function ProductCart(props: TProductCart) {
 		<li className="flex items-center gap-4">
 			<img
 				src={import.meta.env.VITE_PREFIX_IMAGE + props.image}
-				alt=""
-				className="h-32 w-32 rounded object-cover"
+				alt={props.name}
+				className="h-48 w-60 rounded object-cover object-top"
 			/>
 
 			<div>
-				<h3 className="text-sm text-gray-900">{props.name}</h3>
+				<Link to={`/movie/${props.id}`} className="text-2xl pb-4 hover:underline">
+					{props.name}
+				</Link>
 
-				<dl className="mt-0.5 space-y-px text-[10px] text-gray-600">
+				<dl className="mt-0.5 space-y-px text-md text-white">
 					<div>
-						<dt className="inline">Size:</dt>
-						<dd className="inline">XXS</dd>
-					</div>
-
-					<div>
-						<dt className="inline">Color:</dt>
-						<dd className="inline">White</dd>
+						<dd className="inline">${props.price}</dd>
 					</div>
 				</dl>
 			</div>
 
 			<div className="flex flex-1 items-center justify-end gap-2">
-				<button className="text-gray-600 transition hover:text-red-600" onClick={props.clickHandler}>
+				<button className="transition hover:text-red-600" onClick={props.onClick}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth="1.5"
 						stroke="currentColor"
-						className="h-4 w-4"
+						className="h-6 w-6"
 					>
 						<path
 							strokeLinecap="round"

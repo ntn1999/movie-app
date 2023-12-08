@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const listMovies = [] as TListMovies;
 const movie = {} as TMovie;
 const movieDetail = {} as TMovieDetail; // when include "credits"
+const listMovieByGenres = [] as TMovieGenres[];
 
 export const movieSlice = createSlice({
 	name: 'movie',
@@ -13,6 +14,8 @@ export const movieSlice = createSlice({
 		listMovies,
 		movie,
 		movieDetail,
+
+		listMovieByGenres,
 
 		/**
 		 * FOR SEARCH
@@ -35,6 +38,9 @@ export const movieSlice = createSlice({
 		setMovieDetail: (state, action: PayloadAction<TMovieDetail>) => {
 			state.movieDetail = action.payload;
 		},
+		setListMovieByGenres: (state, action: PayloadAction<TMovieGenres[]>) => {
+			state.listMovieByGenres = action.payload;
+		},
 
 		// CUSTOM ACTIONS...
 		setMovieIsInCartById: (state, action: PayloadAction<number>) => {
@@ -42,6 +48,9 @@ export const movieSlice = createSlice({
 				if (movie.id === action.payload) movie.isInCart = true;
 				else return;
 			});
+			// state.listMovieByGenres.forEach((movie: TMovieGenres) => {
+			//   if (movie.)
+			// })
 		},
 
 		/**
@@ -69,6 +78,7 @@ export const {
 	setListMovies,
 	setMovie,
 	setMovieDetail,
+	setListMovieByGenres,
 
 	// CUSTOM ACTIONS...
 	setMovieIsInCartById,

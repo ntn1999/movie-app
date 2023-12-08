@@ -1,10 +1,10 @@
-type TCharacterInfo = {
+type Character = {
 	name: string;
 	character: string;
 	profile_path: string;
 };
 
-function CharacterInfo(props: TCharacterInfo) {
+function CharacterInfo(props: Character) {
 	return (
 		<>
 			<img
