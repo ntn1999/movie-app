@@ -6,6 +6,9 @@ export const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
 		listMovieInCart,
+		totalMovieInCart: 0,
+		totalPriceInCart: 0,
+		removeMovieById: 0,
 	},
 	reducers: {
 		/**
@@ -14,8 +17,21 @@ export const cartSlice = createSlice({
 		setListMovieInCart: (state, action: PayloadAction<TListMovies>) => {
 			state.listMovieInCart = action.payload;
 		},
+		setTotalMovieInCart: (state, action: PayloadAction<number>) => {
+			console.trace(state.totalMovieInCart);
+
+			state.totalMovieInCart = action.payload;
+		},
+		setTotalPriceInCart: (state, action: PayloadAction<number>) => {
+			console.trace(state.totalPriceInCart);
+
+			state.totalPriceInCart = action.payload;
+		},
+		setRemoveMovieById: (state, action: PayloadAction<number>) => {
+			state.removeMovieById = action.payload;
+		},
 	},
 });
 
-export const { setListMovieInCart } = cartSlice.actions;
+export const { setListMovieInCart, setTotalMovieInCart, setTotalPriceInCart, setRemoveMovieById } = cartSlice.actions;
 export default cartSlice.reducer;

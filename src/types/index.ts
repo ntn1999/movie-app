@@ -96,7 +96,8 @@ type TListMovies = TMovie[];
 type TResponseListMovies = {
 	page: number;
 	results: TListMovies;
-	total: number;
+	total_pages: number;
+	total_results: number;
 };
 
 type TReponseWatchlist = {

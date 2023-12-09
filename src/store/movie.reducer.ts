@@ -44,13 +44,13 @@ export const movieSlice = createSlice({
 
 		// CUSTOM ACTIONS...
 		setMovieIsInCartById: (state, action: PayloadAction<number>) => {
-			state.listMovies.forEach((movie: TMovie) => {
-				if (movie.id === action.payload) movie.isInCart = true;
-				else return;
+			state.listMovieByGenres.forEach((movieGenre: TMovieGenres) => {
+				// for in `movies`
+				movieGenre.movies.forEach((movie: TMovie) => {
+					if (movie.id === action.payload) movie.isInCart = true;
+					else return;
+				});
 			});
-			// state.listMovieByGenres.forEach((movie: TMovieGenres) => {
-			//   if (movie.)
-			// })
 		},
 
 		/**

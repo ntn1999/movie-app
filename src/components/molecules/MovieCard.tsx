@@ -43,7 +43,7 @@ function MovieCard(props: TMovieCard) {
 	return (
 		<div className="max-w-xs bg-slate-600 rounded-lg shadow">
 			<img
-				className="pb-5 rounded-t-lg min-h-[32rem] max-w-[20rem]"
+				className="pb-5 rounded-t-lg min-h-[32rem] min-w-[20rem]"
 				src={import.meta.env.VITE_PREFIX_IMAGE + props.movie.poster_path}
 				alt={props.movie.original_title}
 			/>

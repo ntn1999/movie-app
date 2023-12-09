@@ -1,33 +1,32 @@
-import { useEffect, useState } from 'react';
-import { ProductCart } from '@/components/molecules';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { setListMovieInCart } from '@/store/cart.reducer';
-import CatchError from '@/errors/catch.error';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AxiosResponse } from 'axios';
+
 import axiosClient from '@/api/axios.client';
+import { RootState } from '@/store';
+import { ProductCart } from '@/components/molecules';
+import { setListMovieInCart, setRemoveMovieById } from '@/store/cart.reducer';
+import CatchError from '@/errors/catch.error';
 import { EStatusWatchlist } from '@/enums';
 
 function Cart() {
-	const [removeMovieById, setRemoveMovieById] = useState<number>();
 	const dispatch = useDispatch();
-	const { listMovieInCart } = useSelector((state: RootState) => state.cart);
+	const { listMovieInCart, removeMovieById } = useSelector((state: RootState) => state.cart);
 
 	// get movie detail
 	useEffect(() => {
 		(async () => {
 			try {
-				const response: AxiosResponse<TResponseListMovies> = await axiosClient.get(
+				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
 					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
 				);
-				const { results } = response.data;
+				const { results } = responseWatchlist.data;
 
-				if (results) dispatch(setListMovieInCart(results));
+				if (responseWatchlist.data) dispatch(setListMovieInCart(results));
 				else throw Error('Get movie detail fail...');
 			} catch (err) {
 				const { message } = new CatchError(err);
-				console.log(message);
+				window.alert(message);
 			}
 		})();
 	}, [removeMovieById]);
@@ -48,7 +47,7 @@ function Cart() {
 			);
 
 			// update local state to re-render list movie
-			setRemoveMovieById(movie_id);
+			dispatch(setRemoveMovieById(movie_id));
 
 			const { status_code, status_message } = response.data;
 

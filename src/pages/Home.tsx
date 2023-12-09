@@ -3,14 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
-import store, { RootState } from '@/store';
-import { setListMovies, setListMovieByGenres } from '@/store/movie.reducer';
+import { RootState } from '@/store';
+import { setListMovieByGenres } from '@/store/movie.reducer';
 import CatchError from '@/errors/catch.error';
 import { MovieGenres } from '@/components/organisms';
+import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/cart.reducer';
 
 function Home() {
 	const dispatch = useDispatch();
-	const { listMovies, listMovieByGenres } = useSelector((state: RootState) => state.movie);
+	const { listMovieByGenres } = useSelector((state: RootState) => state.movie);
 
 	// default input
 	useEffect(() => {
@@ -28,29 +29,30 @@ function Home() {
 				);
 
 				const { results: resultsTrending } = responseTrending.data;
-				const { results: resultsWatchlist } = responseWatchlist.data;
+				const { results: resultsWatchlist, total_results } = responseWatchlist.data;
 				const { genres } = responseGenres.data;
+				// decrease total API call
+				genres.slice(0, 10);
 
-				if (resultsTrending && responseWatchlist && genres) {
-					resultsTrending.forEach((movie: TMovie) => {
-						// get all id of movie in cart
-						const allMovieIdInWatchList: number[] = resultsWatchlist.map(
-							(watchlist: TMovie) => watchlist.id,
-						);
+				if (responseWatchlist) {
+					const totalPrice: number = resultsWatchlist.reduce(
+						(acc: number, movie: TMovie) => acc + Math.floor(movie.popularity),
+						0,
+					);
+					dispatch(setTotalMovieInCart(total_results));
+					dispatch(setTotalPriceInCart(totalPrice));
+				}
 
-						if (allMovieIdInWatchList.includes(movie.id)) movie.isInCart = true;
-						else movie.isInCart = false;
+				if (resultsTrending && genres) {
+					const storeMovies: TMovieGenres[] = [];
+
+					// Trending in TOP
+					storeMovies.push({
+						genre: 'Trending',
+						movies: resultsTrending,
 					});
 
-					// save all movie was changed
-					dispatch(setListMovies(resultsTrending));
-
-					// fetch each
-					const storeMovies: TMovieGenres[] = [];
-					// decrease total API call
-					genres.slice(0, 10);
-
-					for await (const genre of genres) {
+					for (const genre of genres) {
 						const response: AxiosResponse<TResponseListMovies> = await axiosClient.get('/discover/movie', {
 							params: {
 								with_genres: genre.id,
@@ -59,12 +61,25 @@ function Home() {
 						});
 						const { results } = response.data;
 
+						// push another movie into Array
 						storeMovies.push({
 							genre: genre.name,
 							movies: results,
 						});
 					}
-					// save list movie
+
+					storeMovies.forEach((movieGenre: TMovieGenres) => {
+						// get Array include id of movie in Watchlist
+						const allMovieIdInWatchList: number[] = resultsWatchlist.map(
+							(watchlist: TMovie) => watchlist.id,
+						);
+
+						movieGenre.movies.forEach((movie: TMovie) => {
+							if (allMovieIdInWatchList.includes(movie.id)) movie.isInCart = true;
+							else movie.isInCart = false;
+						});
+					});
+
 					dispatch(setListMovieByGenres(storeMovies));
 				} else throw Error('Call API fail...');
 			} catch (err) {
@@ -76,7 +91,6 @@ function Home() {
 
 	return (
 		<>
-			<MovieGenres genre="Trending" movies={listMovies} maxDisplay={4} />
 			{listMovieByGenres.map((movie: TMovieGenres, index: number) => (
 				<MovieGenres key={index} genre={movie.genre} movies={movie.movies} maxDisplay={4} />
 			))}

@@ -25,7 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				<Route path="cart" Component={Cart} />
 			</Routes>
 		</BrowserRouter>
-		<Footer />
+		{/* <Footer /> */}
 	</Provider>,
 	// </React.StrictMode>,
 );
