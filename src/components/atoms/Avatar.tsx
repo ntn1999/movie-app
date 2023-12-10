@@ -1,9 +1,14 @@
 import { memo } from 'react';
 
-function Avatar({ image }: { image: string }) {
+type TAvatar = {
+	image: string;
+	alt?: string;
+};
+
+function Avatar(props: TAvatar) {
 	return (
 		<>
-			<img className="w-30 h-30" src={image} alt="Rounded avatar"></img>
+			<img className="object-cover mb-4 w-20 h-20 rounded-full" src={props.image} alt={props.alt}></img>
 		</>
 	);
 }

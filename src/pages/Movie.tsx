@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
@@ -6,10 +6,12 @@ import { AxiosResponse } from 'axios';
 import { RootState } from '@/store';
 import { setMovieDetail } from '@/store/movie.reducer';
 import axiosClient from '@/api/axios.client';
-import { Button, Badge, Character } from '@/components/atoms';
+import { Button, Badge, Trailers } from '@/components/atoms';
+import { CharacterInfo } from '@/components/molecules';
 import CatchError from '@/errors/catch.error';
 
 function Movie() {
+	const [videoKeyYoutube, setVideoKeyYoutube] = useState<string>('');
 	const dispatch = useDispatch();
 	const { movie_id } = useParams<string>();
 	const { movieDetail } = useSelector((state: RootState) => state.movie);
@@ -17,14 +19,20 @@ function Movie() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const response: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
+				const responseMovieDetail: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
 					params: {
 						// get actors information
 						append_to_response: 'credits',
 					},
 				});
+				dispatch(setMovieDetail(responseMovieDetail.data));
 
-				dispatch(setMovieDetail(response.data));
+				const responseMovieVideos: AxiosResponse<TResponseMovieVideos> = await axiosClient.get(
+					`/movie/${movie_id}/videos`,
+				);
+				const { results } = responseMovieVideos.data;
+				const [firstTrailer] = results;
+				setVideoKeyYoutube(firstTrailer.key);
 			} catch (err: unknown) {
 				const { message } = new CatchError(err);
 				window.alert(message);
@@ -102,7 +110,7 @@ function Movie() {
 					{movieDetail.credits?.cast
 						.map((cast: TCast, index: number) => (
 							<span key={index}>
-								<Character
+								<CharacterInfo
 									name={cast.name}
 									character={cast.character}
 									profile_path={cast.profile_path}
@@ -112,6 +120,8 @@ function Movie() {
 						.slice(0, 15)}
 				</div>
 			</div>
+
+			<Trailers videoKey={videoKeyYoutube} />
 		</>
 	);
 }
