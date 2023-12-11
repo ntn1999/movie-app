@@ -100,7 +100,7 @@ type TResponseListMovies = {
 	total_results: number;
 };
 
-type TReponseWatchlist = {
+type TResponseWatchlist = {
 	success: boolean;
 	status_code: 1 | 12 | 13; // 1 for the first time add movie | 12 is updated | 13 is deleted
 	status_message: string;

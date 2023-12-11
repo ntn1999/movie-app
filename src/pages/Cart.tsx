@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AxiosResponse } from 'axios';
 
-import axiosClient from '@/api/axios.client';
 import { RootState } from '@/store';
 import { ProductCart } from '@/components/molecules';
-import { setListMovieInCart, setRemoveMovieById } from '@/store/cart.reducer';
-import CatchError from '@/errors/catch.error';
-import { EStatusWatchlist } from '@/enums';
+import { SagaActions } from '@/enums/saga.enum';
 
 function Cart() {
 	const dispatch = useDispatch();
@@ -15,20 +11,7 @@ function Cart() {
 
 	// get movie detail
 	useEffect(() => {
-		(async () => {
-			try {
-				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
-					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
-				);
-				const { results } = responseWatchlist.data;
-
-				if (responseWatchlist.data) dispatch(setListMovieInCart(results));
-				else throw Error('Get movie detail fail...');
-			} catch (err) {
-				const { message } = new CatchError(err);
-				window.alert(message);
-			}
-		})();
+		dispatch({ type: SagaActions.FETCH_LIST_MOVIE_IN_CART });
 	}, [removeMovieById]);
 
 	/**
@@ -36,28 +19,7 @@ function Cart() {
 	 * @param movie_id - id of movie for remove
 	 */
 	const handleRemoveMovie = async (movie_id: number) => {
-		try {
-			const response: AxiosResponse<TReponseWatchlist> = await axiosClient.post(
-				`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist`,
-				{
-					media_type: 'movie',
-					media_id: movie_id,
-					watchlist: false, // FOR REMOVE
-				},
-			);
-
-			// update local state to re-render list movie
-			dispatch(setRemoveMovieById(movie_id));
-
-			const { status_code, status_message } = response.data;
-
-			if (status_code === EStatusWatchlist.ADDED) return status_message;
-			else if (status_code === EStatusWatchlist.REMOVED) return status_message;
-			else throw Error('Watchlist fail...');
-		} catch (err) {
-			const { message } = new CatchError(err);
-			window.alert(message);
-		}
+		dispatch({ type: SagaActions.REMOVE_MOVIE_BY_ID, payload: movie_id });
 	};
 
 	const subTotal = (): number => {

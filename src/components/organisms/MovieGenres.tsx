@@ -11,7 +11,7 @@ function MovieGenres(props: TMovieGenres) {
 	return (
 		<>
 			<section className="flex justify-center items-center mb-5">
-				<div className={`grid md:grid-cols-${props.maxDisplay} gap-x-10 mt-10 place-items-center`}>
+				<div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-10 gap-y-5 mt-10 place-items-center">
 					<div className="col-span-full w-full">
 						<div className="flex justify-between items-end">
 							<span className="text-2xl text-orange-300">{props.genre}</span>
@@ -21,7 +21,7 @@ function MovieGenres(props: TMovieGenres) {
 					</div>
 					{props.movies
 						.map((movie: TMovie, index: number) => <MovieCard key={index} movie={movie} />)
-						.slice(0, props.maxDisplay)}
+						.slice(0, 4)}
 				</div>
 			</section>
 		</>

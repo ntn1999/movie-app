@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 
 import { RootState } from '@/store';
-import { setMovieDetail } from '@/store/movie.reducer';
+import { setMovieDetail } from '@/store/reducers/movie.reducer';
 import axiosClient from '@/api/axios.client';
 import { Button, Badge, Trailers } from '@/components/atoms';
 import { CharacterInfo } from '@/components/molecules';

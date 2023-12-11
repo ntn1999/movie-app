@@ -4,10 +4,10 @@ import { AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
 import { RootState } from '@/store';
-import { setListMovieByGenres } from '@/store/movie.reducer';
+import { setListMovieByGenres } from '@/store/reducers/movie.reducer';
 import CatchError from '@/errors/catch.error';
 import { MovieGenres } from '@/components/organisms';
-import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/cart.reducer';
+import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/reducers/cart.reducer';
 
 function Home() {
 	const dispatch = useDispatch();

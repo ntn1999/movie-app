@@ -8,7 +8,7 @@ import { StarRating } from '@/components/molecules';
 import useFindMovieHook from '@/hooks/useFindMovie.hook';
 import CatchError from '@/errors/catch.error';
 import { EStatusWatchlist } from '@/enums';
-import { setMovieIsInCartById } from '@/store/movie.reducer';
+import { setMovieIsInCartById } from '@/store/reducers/movie.reducer';
 import axiosClient from '@/api/axios.client';
 
 type TMovieCard = {
@@ -21,7 +21,7 @@ function MovieCard(props: TMovieCard) {
 
 	const handleAddToCart = async () => {
 		try {
-			const response: AxiosResponse<TReponseWatchlist> = await axiosClient.post(
+			const response: AxiosResponse<TResponseWatchlist> = await axiosClient.post(
 				`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist`,
 				{
 					media_type: 'movie',
