@@ -7,7 +7,7 @@ import { EStatusWatchlist } from '@/enums';
 import { SagaActions } from '@/enums/saga.enum';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-function* fetchCartMovie() {
+function* fetchWathlistMovies() {
 	try {
 		const response: AxiosResponse<TResponseListMovies> = yield call(
 			axiosClient.get,
@@ -23,7 +23,7 @@ function* fetchCartMovie() {
 	}
 }
 
-function* removeByMovieId(action: PayloadAction<number>) {
+function* removeWatchListByMovieId(action: PayloadAction<number>) {
 	try {
 		const response: AxiosResponse<TResponseWatchlist> = yield call(
 			axiosClient.post,
@@ -49,9 +49,9 @@ function* removeByMovieId(action: PayloadAction<number>) {
 }
 
 export function* getWatchListMovie() {
-	yield takeLatest(SagaActions.FETCH_LIST_MOVIE_IN_CART, fetchCartMovie);
+	yield takeLatest(SagaActions.FETCH_LIST_MOVIE_IN_CART, fetchWathlistMovies);
 }
 
 export function* removeMovieById() {
-	yield takeEvery(SagaActions.REMOVE_MOVIE_BY_ID, removeByMovieId);
+	yield takeEvery(SagaActions.REMOVE_MOVIE_BY_ID, removeWatchListByMovieId);
 }

@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AxiosResponse } from 'axios';
 
-import axiosClient from '@/api/axios.client';
 import { RootState } from '@/store';
-import { setListMovieByGenres } from '@/store/reducers/movie.reducer';
-import CatchError from '@/errors/catch.error';
 import { MovieGenres } from '@/components/organisms';
-import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/reducers/cart.reducer';
+import { SagaActions } from '@/enums/saga.enum';
 
 function Home() {
 	const dispatch = useDispatch();
@@ -15,77 +11,7 @@ function Home() {
 
 	// default input
 	useEffect(() => {
-		(async () => {
-			try {
-				// get list Trending movie list in current week
-				const responseTrending: AxiosResponse<TResponseListMovies> = await axiosClient.get(
-					'/trending/movie/week',
-				);
-				// get list of film genres
-				const responseGenres: AxiosResponse<TResponseGenres> = await axiosClient.get('/genre/movie/list');
-				// get list Watchlist movie (called in Cart)
-				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
-					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
-				);
-
-				const { results: resultsTrending } = responseTrending.data;
-				const { results: resultsWatchlist, total_results } = responseWatchlist.data;
-				const { genres } = responseGenres.data;
-
-				if (responseWatchlist) {
-					const totalPrice: number = resultsWatchlist.reduce(
-						(acc: number, movie: TMovie) => acc + Math.floor(movie.popularity),
-						0,
-					);
-					dispatch(setTotalMovieInCart(total_results));
-					dispatch(setTotalPriceInCart(totalPrice));
-				}
-
-				if (resultsTrending && genres) {
-					const storeMovies: TMovieGenres[] = [];
-
-					// Trending in TOP
-					storeMovies.push({
-						genre: 'Trending',
-						movies: resultsTrending,
-					});
-
-					// only get 10 api about genres
-					for (const genre of genres.slice(0, 10)) {
-						const response: AxiosResponse<TResponseListMovies> = await axiosClient.get('/discover/movie', {
-							params: {
-								with_genres: genre.id,
-								sort_by: 'popularity.desc',
-							},
-						});
-						const { results } = response.data;
-
-						// push another movie into Array
-						storeMovies.push({
-							genre: genre.name,
-							movies: results,
-						});
-					}
-
-					storeMovies.forEach((movieGenre: TMovieGenres) => {
-						// get Array include id of movie in Watchlist
-						const allMovieIdInWatchList: number[] = resultsWatchlist.map(
-							(watchlist: TMovie) => watchlist.id,
-						);
-
-						movieGenre.movies.forEach((movie: TMovie) => {
-							if (allMovieIdInWatchList.includes(movie.id)) movie.isInCart = true;
-							else movie.isInCart = false;
-						});
-					});
-
-					dispatch(setListMovieByGenres(storeMovies));
-				} else throw Error('Call API fail...');
-			} catch (err) {
-				const { message } = new CatchError(err);
-				window.alert(message);
-			}
-		})();
+		dispatch({ type: SagaActions.GET_LIST_MOVIES });
 	}, []);
 
 	return (
