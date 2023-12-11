@@ -31,8 +31,6 @@ function Home() {
 				const { results: resultsTrending } = responseTrending.data;
 				const { results: resultsWatchlist, total_results } = responseWatchlist.data;
 				const { genres } = responseGenres.data;
-				// decrease total API call
-				genres.slice(0, 10);
 
 				if (responseWatchlist) {
 					const totalPrice: number = resultsWatchlist.reduce(
@@ -52,7 +50,8 @@ function Home() {
 						movies: resultsTrending,
 					});
 
-					for (const genre of genres) {
+					// only get 10 api about genres
+					for (const genre of genres.slice(0, 10)) {
 						const response: AxiosResponse<TResponseListMovies> = await axiosClient.get('/discover/movie', {
 							params: {
 								with_genres: genre.id,

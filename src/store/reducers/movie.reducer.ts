@@ -14,6 +14,7 @@ export const movieSlice = createSlice({
 		listMovies,
 		movie,
 		movieDetail,
+		oneMovieVideoKey: '',
 
 		listMovieByGenres,
 
@@ -40,6 +41,9 @@ export const movieSlice = createSlice({
 		},
 		setListMovieByGenres: (state, action: PayloadAction<TMovieGenres[]>) => {
 			state.listMovieByGenres = action.payload;
+		},
+		setOneMovieVideoKey: (state, action: PayloadAction<string>) => {
+			state.oneMovieVideoKey = action.payload;
 		},
 
 		// CUSTOM ACTIONS...
@@ -79,6 +83,7 @@ export const {
 	setMovie,
 	setMovieDetail,
 	setListMovieByGenres,
+	setOneMovieVideoKey,
 
 	// CUSTOM ACTIONS...
 	setMovieIsInCartById,

@@ -1,49 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { AxiosResponse } from 'axios';
 
 import { RootState } from '@/store';
-import { setMovieDetail } from '@/store/reducers/movie.reducer';
-import axiosClient from '@/api/axios.client';
 import { Button, Badge, Trailers } from '@/components/atoms';
 import { CharacterInfo } from '@/components/molecules';
-import CatchError from '@/errors/catch.error';
+import { SagaActions } from '@/enums/saga.enum';
 
 function Movie() {
-	const [videoKeyYoutube, setVideoKeyYoutube] = useState<string>('');
 	const dispatch = useDispatch();
 	const { movie_id } = useParams<string>();
-	const { movieDetail } = useSelector((state: RootState) => state.movie);
+	const { movieDetail, oneMovieVideoKey } = useSelector((state: RootState) => state.movie);
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const responseMovieDetail: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
-					params: {
-						// get actors information
-						append_to_response: 'credits',
-					},
-				});
-				dispatch(setMovieDetail(responseMovieDetail.data));
-
-				const responseMovieVideos: AxiosResponse<TResponseMovieVideos> = await axiosClient.get(
-					`/movie/${movie_id}/videos`,
-				);
-				const { results } = responseMovieVideos.data;
-				const [firstTrailer] = results;
-				setVideoKeyYoutube(firstTrailer.key);
-			} catch (err: unknown) {
-				const { message } = new CatchError(err);
-				window.alert(message);
-			}
-		})();
-
-		return () => {
-			// Delete all state of the movie (in case movie details are cached)
-			// const defaultMovie = {} as TMovie;
-			// dispatch(setMovie(defaultMovie));
-		};
+		dispatch({ type: SagaActions.GET_DETAIL_MOVIE_BY_ID, payload: movie_id });
+		dispatch({ type: SagaActions.GET_VIDEO_MOVIE_BY_ID, payload: movie_id });
 	}, []);
 
 	return (
@@ -121,7 +92,7 @@ function Movie() {
 				</div>
 			</div>
 
-			<Trailers videoKey={videoKeyYoutube} />
+			<Trailers videoKey={oneMovieVideoKey} />
 		</>
 	);
 }

@@ -48,10 +48,10 @@ function* removeByMovieId(action: PayloadAction<number>) {
 	}
 }
 
-export function* getWatchListMovie(): any {
+export function* getWatchListMovie() {
 	yield takeLatest(SagaActions.FETCH_LIST_MOVIE_IN_CART, fetchCartMovie);
 }
 
-export function* removeMovieById(): any {
+export function* removeMovieById() {
 	yield takeEvery(SagaActions.REMOVE_MOVIE_BY_ID, removeByMovieId);
 }
