@@ -16,12 +16,14 @@ body {
 	grid-template-rows: 1fr;
 	grid-column-gap: 3rem;
 
+	margin-top: 2rem;
+
 	.movie-detail__left {
 		margin-left: auto;
 		margin-right: 0;
 
 		img {
-			width: 20rem;
+			width: 23.5rem;
 			padding-bottom: 1rem;
 		}
 
@@ -99,8 +101,17 @@ body {
 }
 
 .cast-information {
+	// padding: 2rem;
+
+	&__title {
+		font-size: 26px;
+		padding: 1rem 0;
+	}
+
 	&__character {
 		display: flex;
+		justify-content: center;
+		width: inherit;
 	}
 }
 

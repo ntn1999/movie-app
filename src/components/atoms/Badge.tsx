@@ -1,18 +1,14 @@
 type TBadge = {
-	name: string;
-	color?: 'amber';
-	width?: 4;
-	height?: 2;
+	text: string;
 };
 
 function Badge(props: TBadge) {
 	return (
-		<span
-			className={`bg-${props.color ?? 'orange'}-800 px-${props.width ?? '2.5'} py-${props.height ?? '1'}
-      text-white text-xs font-medium me-2  rounded`}
-		>
-			{props.name}
-		</span>
+		<>
+			<span className={`bg-orange-800 px-2.5 py-1 text-white text-xs font-medium me-2  rounded`}>
+				{props.text}
+			</span>
+		</>
 	);
 }
 

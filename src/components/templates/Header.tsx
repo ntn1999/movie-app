@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
@@ -10,9 +10,6 @@ function Header() {
 		localStorage.setItem('totalMovieInCart', String(totalMovieInCart));
 		localStorage.setItem('totalPrice', String(totalPriceInCart));
 	}, [totalMovieInCart, totalPriceInCart]);
-
-	console.log(localStorage.getItem('totalMovieInCart'));
-	console.log(localStorage.getItem('totalPrice'));
 
 	return (
 		<header className="z-10 bg-gray-400 sticky top-0 overflow-hidden flex items-center justify-center">
@@ -30,7 +27,7 @@ function Header() {
 						<li className="ml-2 lg:ml-4 relative inline-block">
 							<a className="" href="/cart">
 								<div className="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">
-									{localStorage.getItem('totalMovieInCart')}
+									{totalMovieInCart}
 								</div>
 								<svg
 									className="h-9 lg:h-10 p-2 text-black svg-inline--fa fa-shopping-cart fa-w-18 fa-9x"
@@ -54,7 +51,7 @@ function Header() {
 
 				<div className="ml-4 hidden sm:flex flex-col font-bold">
 					<span className="text-xs text-white">Your Cart</span>
-					<span>${localStorage.getItem('totalPrice')}</span>
+					<span>${totalPriceInCart}</span>
 				</div>
 			</div>
 

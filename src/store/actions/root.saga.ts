@@ -1,6 +1,6 @@
 import { all, fork } from 'redux-saga/effects';
 
-import { getWatchListMovie, removeMovieById } from './cart.action';
+import { addMovieById, getWatchListMovie, removeMovieById } from './cart.action';
 import { getListMovies, getMovieDetailById, getMovieVideoById } from './movie.action';
 
 export function* rootSaga() {
@@ -10,5 +10,6 @@ export function* rootSaga() {
 		fork(getMovieDetailById),
 		fork(getMovieVideoById),
 		fork(getListMovies),
+		fork(addMovieById),
 	]);
 }

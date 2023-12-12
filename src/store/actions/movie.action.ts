@@ -59,6 +59,9 @@ function* fetchListMovies() {
 			(acc: number, movie: TMovie) => acc + Math.floor(movie.popularity),
 			0,
 		);
+		console.log(total_results);
+		console.log(totalPrice);
+
 		yield put(setTotalMovieInCart(total_results));
 		yield put(setTotalPriceInCart(totalPrice));
 	}
@@ -71,7 +74,7 @@ function* fetchListMovies() {
 		});
 
 		// only get 10 api about genres
-		for (const genre of genres.slice(0, 10)) {
+		for (const genre of genres.slice(0, 5)) {
 			//* API 4
 			const response: AxiosResponse<TResponseListMovies> = yield call(axiosClient.get, '/discover/movie', {
 				params: {
