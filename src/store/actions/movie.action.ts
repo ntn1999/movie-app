@@ -29,8 +29,6 @@ function* fetchListMovies() {
 			(acc: number, movie: TMovie) => acc + Math.floor(movie.popularity),
 			0,
 		);
-		console.log(total_results);
-		console.log(totalPrice);
 
 		yield put(setTotalMovieInCart(total_results));
 		yield put(setTotalPriceInCart(totalPrice));

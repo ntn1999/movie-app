@@ -1,13 +1,4 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
-import { RootState } from '@/store';
-
 function Header() {
-	const { totalMovieInCart, totalPriceInCart } = useSelector((state: RootState) => state.cart);
-
-	useEffect(() => {});
-
 	return (
 		<header className="z-10 bg-gray-400 sticky top-0 overflow-hidden flex items-center justify-center">
 			<div className="container mx-auto px-4 py-4 flex items-center">
@@ -23,9 +14,9 @@ function Header() {
 					<ul className="ml-4 xl:w-48 flex items-center justify-end">
 						<li className="ml-2 lg:ml-4 relative inline-block">
 							<a className="" href="/cart">
-								<div className="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">
+								{/* <div className="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">
 									{totalMovieInCart}
-								</div>
+								</div> */}
 								<svg
 									className="h-9 lg:h-10 p-2 text-black svg-inline--fa fa-shopping-cart fa-w-18 fa-9x"
 									aria-hidden="true"
@@ -47,8 +38,8 @@ function Header() {
 				</nav>
 
 				<div className="ml-4 hidden sm:flex flex-col font-bold">
-					<span className="text-xs text-white">Your Cart</span>
-					<span>${totalPriceInCart}</span>
+					{/* <span className="text-xs text-white">Your Cart</span>
+					<span>${totalPriceInCart}</span> */}
 				</div>
 			</div>
 		</header>

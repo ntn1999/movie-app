@@ -73,7 +73,7 @@ type TMovieDetail = {
 	status: string;
 	tagline: string;
 	title: string;
-	video: false;
+	video: boolean;
 	vote_average: number;
 	vote_count: number;
 	credits: {

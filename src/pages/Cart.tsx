@@ -91,11 +91,6 @@ function Cart() {
 								</dl>
 
 								<div className="flex justify-end">
-									{/* <button
-										className="block rounded bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600"
-									>
-										Checkout
-									</button> */}
 									<Button text="Checkout" onClick={handleCheckout} />
 								</div>
 							</div>

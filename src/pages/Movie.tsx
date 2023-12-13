@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
-import { RootState } from '@/store';
 import { Button, Badge, Trailers } from '@/components/atoms';
 import { CharacterInfo } from '@/components/molecules';
 import { SagaActions } from '@/enums/saga.enum';
 import { scrollToTop } from '@/utils';
-import { setMovieDetail } from '@/store/reducers/movie.reducer';
 
 function Movie() {
-	const [videoKey, setVideoKey] = useState<string>();
+	const [isInCart, setIsInCart] = useState<boolean>(false);
+	const [movieDetail, setMovieDetail] = useState<TMovieDetail>({} as TMovieDetail);
 	const dispatch = useDispatch();
 	const { movie_id } = useParams<string>();
-	const { movieDetail } = useSelector((state: RootState) => state.movie);
-	const { listMovieInCart } = useSelector((state: RootState) => state.cart);
 
 	const director: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Producer');
 	const writer: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Writer');
@@ -26,14 +23,8 @@ function Movie() {
 		.split(` , `);
 
 	useEffect(() => {
-		// get latest list movie in cart
-		dispatch({ type: SagaActions.FETCH_LIST_MOVIE_IN_CART, payload: movie_id });
-	}, []);
-
-	useEffect(() => {
-		scrollToTop();
-
 		(async () => {
+			scrollToTop();
 			try {
 				const responseMovieDetail: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
 					params: {
@@ -41,26 +32,17 @@ function Movie() {
 						append_to_response: 'credits',
 					},
 				});
-				const { data: movieDetail } = responseMovieDetail;
+				const { data } = responseMovieDetail;
 
-				console.log(listMovieInCart);
-
-				const isThisMovieInCart: TMovie | undefined = listMovieInCart.find(
-					(movie: TMovie) => movie.id === Number(movie_id),
+				const responseWatchlist: AxiosResponse<TResponseListMovies> = await axiosClient.get(
+					`${import.meta.env.VITE_TMDB_ACCOUNT}/watchlist/movies`,
 				);
+				const { results } = responseWatchlist.data;
 
-				if (isThisMovieInCart) movieDetail.isInCart = true;
-				else movieDetail.isInCart = false;
-				dispatch(setMovieDetail(movieDetail));
-
-				// get video youtube trailers
-				const responseMovieVideo: AxiosResponse<TResponseMovieVideos> = await axiosClient.get(
-					`/movie/${movie_id}/videos`,
-				);
-				const { results } = responseMovieVideo.data;
-				const [firstTrailer] = results;
-
-				setVideoKey(firstTrailer.key);
+				results.forEach((movie: TMovie) => {
+					if (movie.id === data.id) setIsInCart(true);
+				});
+				setMovieDetail(data);
 			} catch (err: unknown) {
 				if (err instanceof AxiosError) {
 					window.alert(err.message);
@@ -70,6 +52,7 @@ function Movie() {
 	}, []);
 
 	const handleAddToCart = async () => {
+		setIsInCart(true);
 		dispatch({ type: SagaActions.ADD_MOVIE_BY_ID, payload: movie_id });
 	};
 
@@ -82,11 +65,7 @@ function Movie() {
 						alt={movieDetail.title}
 						className="min-h-[30rem]"
 					/>
-					<Button
-						text={movieDetail.isInCart ? 'In cart' : 'Add to cart'}
-						width={10}
-						onClick={handleAddToCart}
-					/>
+					<Button text={isInCart ? 'In cart' : 'Add to cart'} fullWidth onClick={handleAddToCart} />
 				</div>
 				<div className="movie-detail__right">
 					<article
@@ -151,7 +130,7 @@ function Movie() {
 				</div>
 			</div>
 
-			<Trailers videoKey={videoKey} />
+			<Trailers movieId={movie_id} />
 		</>
 	);
 }

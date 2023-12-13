@@ -48,9 +48,6 @@ export const movieSlice = createSlice({
 					else return;
 				});
 			});
-
-			// set for current movie in detail page
-			state.movieDetail.isInCart = true;
 		},
 	},
 });
