@@ -64,7 +64,6 @@ function* addWatchListByMovieId(action: PayloadAction<number>) {
 
 		if (status_code === EStatusWatchlist.ADDED || status_code === EStatusWatchlist.UPDATED) {
 			yield put(setMovieIsInCartById(action.payload));
-			// yield put();
 		}
 	} catch (err: unknown) {
 		if (err instanceof AxiosError) {

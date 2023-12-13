@@ -13,7 +13,7 @@ type TMovieCard = {
 function MovieCard(props: TMovieCard) {
 	const dispatch = useDispatch();
 
-	const handleAddToCart = async () => {
+	const handleAddToCart = () => {
 		dispatch({ type: SagaActions.ADD_MOVIE_BY_ID, payload: props.movie.id });
 	};
 

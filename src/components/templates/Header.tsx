@@ -6,7 +6,7 @@ import { RootState } from '@/store';
 function Header() {
 	const { totalMovieInCart, totalPriceInCart } = useSelector((state: RootState) => state.cart);
 
-	useEffect(() => {}, [totalMovieInCart, totalPriceInCart]);
+	useEffect(() => {});
 
 	return (
 		<header className="z-10 bg-gray-400 sticky top-0 overflow-hidden flex items-center justify-center">

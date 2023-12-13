@@ -9,12 +9,15 @@ import { Button, Badge, Trailers } from '@/components/atoms';
 import { CharacterInfo } from '@/components/molecules';
 import { SagaActions } from '@/enums/saga.enum';
 import { scrollToTop } from '@/utils';
+import { setMovieDetail } from '@/store/reducers/movie.reducer';
 
 function Movie() {
 	const [videoKey, setVideoKey] = useState<string>();
 	const dispatch = useDispatch();
 	const { movie_id } = useParams<string>();
 	const { movieDetail } = useSelector((state: RootState) => state.movie);
+	const { listMovieInCart } = useSelector((state: RootState) => state.cart);
+
 	const director: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Producer');
 	const writer: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Writer');
 	const country = movieDetail.production_countries
@@ -23,15 +26,38 @@ function Movie() {
 		.split(` , `);
 
 	useEffect(() => {
+		// get latest list movie in cart
+		dispatch({ type: SagaActions.FETCH_LIST_MOVIE_IN_CART, payload: movie_id });
+	}, []);
+
+	useEffect(() => {
 		scrollToTop();
-		dispatch({ type: SagaActions.GET_DETAIL_MOVIE_BY_ID, payload: movie_id });
 
 		(async () => {
 			try {
-				const response: AxiosResponse<TResponseMovieVideos> = await axiosClient.get(
+				const responseMovieDetail: AxiosResponse<TMovieDetail> = await axiosClient.get(`/movie/${movie_id}`, {
+					params: {
+						// get actors information
+						append_to_response: 'credits',
+					},
+				});
+				const { data: movieDetail } = responseMovieDetail;
+
+				console.log(listMovieInCart);
+
+				const isThisMovieInCart: TMovie | undefined = listMovieInCart.find(
+					(movie: TMovie) => movie.id === Number(movie_id),
+				);
+
+				if (isThisMovieInCart) movieDetail.isInCart = true;
+				else movieDetail.isInCart = false;
+				dispatch(setMovieDetail(movieDetail));
+
+				// get video youtube trailers
+				const responseMovieVideo: AxiosResponse<TResponseMovieVideos> = await axiosClient.get(
 					`/movie/${movie_id}/videos`,
 				);
-				const { results } = response.data;
+				const { results } = responseMovieVideo.data;
 				const [firstTrailer] = results;
 
 				setVideoKey(firstTrailer.key);
@@ -56,7 +82,11 @@ function Movie() {
 						alt={movieDetail.title}
 						className="min-h-[30rem]"
 					/>
-					<Button text="Buy now" width={10} onClick={handleAddToCart} />
+					<Button
+						text={movieDetail.isInCart ? 'In cart' : 'Add to cart'}
+						width={10}
+						onClick={handleAddToCart}
+					/>
 				</div>
 				<div className="movie-detail__right">
 					<article

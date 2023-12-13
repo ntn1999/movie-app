@@ -1,27 +1,10 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
 import { SagaActions } from '@/enums/saga.enum';
-import { setListMovieByGenres, setMovieDetail } from '@/store/reducers/movie.reducer';
+import { setListMovieByGenres } from '@/store/reducers/movie.reducer';
 import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/reducers/cart.reducer';
-
-function* fetchMovieDetailById(action: PayloadAction<number>) {
-	try {
-		const response: AxiosResponse<TMovieDetail> = yield call(axiosClient.get, `/movie/${action.payload}`, {
-			params: {
-				// get actors information
-				append_to_response: 'credits',
-			},
-		});
-		yield put(setMovieDetail(response.data));
-	} catch (err) {
-		if (err instanceof AxiosError) {
-			throw Error(err.message);
-		}
-	}
-}
 
 function* fetchListMovies() {
 	const storeListMoviesByGenres: TMovieGenres[] = [];
@@ -90,10 +73,6 @@ function* fetchListMovies() {
 
 		yield put(setListMovieByGenres(storeListMoviesByGenres));
 	}
-}
-
-export function* getMovieDetailById() {
-	yield takeEvery(SagaActions.GET_DETAIL_MOVIE_BY_ID, fetchMovieDetailById);
 }
 
 export function* getListMovies() {

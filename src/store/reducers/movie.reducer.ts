@@ -40,6 +40,7 @@ export const movieSlice = createSlice({
 
 		// CUSTOM ACTIONS...
 		setMovieIsInCartById: (state, action: PayloadAction<number>) => {
+			// set for each movie in Home
 			state.listMovieByGenres.forEach((movieGenre: TMovieGenres) => {
 				// for in `movies`
 				movieGenre.movies.forEach((movie: TMovie) => {
@@ -47,6 +48,9 @@ export const movieSlice = createSlice({
 					else return;
 				});
 			});
+
+			// set for current movie in detail page
+			state.movieDetail.isInCart = true;
 		},
 	},
 });
