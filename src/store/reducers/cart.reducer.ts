@@ -18,8 +18,6 @@ export const cartSlice = createSlice({
 			state.listMovieInCart = action.payload;
 		},
 		setTotalMovieInCart: (state, action: PayloadAction<number>) => {
-			console.log('SET');
-
 			state.totalMovieInCart = action.payload;
 		},
 		setTotalPriceInCart: (state, action: PayloadAction<number>) => {

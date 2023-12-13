@@ -6,10 +6,7 @@ import { RootState } from '@/store';
 function Header() {
 	const { totalMovieInCart, totalPriceInCart } = useSelector((state: RootState) => state.cart);
 
-	useEffect(() => {
-		localStorage.setItem('totalMovieInCart', String(totalMovieInCart));
-		localStorage.setItem('totalPrice', String(totalPriceInCart));
-	}, [totalMovieInCart, totalPriceInCart]);
+	useEffect(() => {}, [totalMovieInCart, totalPriceInCart]);
 
 	return (
 		<header className="z-10 bg-gray-400 sticky top-0 overflow-hidden flex items-center justify-center">
@@ -54,8 +51,6 @@ function Header() {
 					<span>${totalPriceInCart}</span>
 				</div>
 			</div>
-
-			{/* <hr> */}
 		</header>
 	);
 }

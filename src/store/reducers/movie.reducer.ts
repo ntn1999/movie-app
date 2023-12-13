@@ -17,14 +17,6 @@ export const movieSlice = createSlice({
 		oneMovieVideoKey: '',
 
 		listMovieByGenres,
-
-		/**
-		 * FOR SEARCH
-		 */
-		searchInput: '',
-		searchPage: 1,
-		movieSearchQuery: '',
-		searchByType: 'movie',
 	},
 	reducers: {
 		/**
@@ -56,22 +48,6 @@ export const movieSlice = createSlice({
 				});
 			});
 		},
-
-		/**
-		 * FOR SEARCH
-		 */
-		setSearchInput: (state, action: PayloadAction<string>) => {
-			state.searchInput = action.payload;
-		},
-		setSearchPage: (state, action: PayloadAction<number>) => {
-			state.searchPage = action.payload;
-		},
-		setMovieSearchQuery: (state, action: PayloadAction<string>) => {
-			state.movieSearchQuery = action.payload;
-		},
-		setSearchByType: (state, action: PayloadAction<string>) => {
-			state.searchByType = action.payload;
-		},
 	},
 });
 
@@ -87,14 +63,6 @@ export const {
 
 	// CUSTOM ACTIONS...
 	setMovieIsInCartById,
-
-	/**
-	 * FOR SEARCH
-	 */
-	setSearchInput,
-	setSearchPage,
-	setMovieSearchQuery,
-	setSearchByType,
 } = movieSlice.actions;
 
 export default movieSlice.reducer;

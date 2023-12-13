@@ -101,8 +101,6 @@ body {
 }
 
 .cast-information {
-	// padding: 2rem;
-
 	&__title {
 		font-size: 26px;
 		padding: 1rem 0;
@@ -112,6 +110,7 @@ body {
 		display: flex;
 		justify-content: center;
 		width: inherit;
+		overflow: initial;
 	}
 }
 

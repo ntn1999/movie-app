@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
 import { SagaActions } from '@/enums/saga.enum';
-import { setListMovieByGenres, setMovieDetail, setOneMovieVideoKey } from '@/store/reducers/movie.reducer';
+import { setListMovieByGenres, setMovieDetail } from '@/store/reducers/movie.reducer';
 import { setTotalMovieInCart, setTotalPriceInCart } from '@/store/reducers/cart.reducer';
 
 function* fetchMovieDetailById(action: PayloadAction<number>) {
@@ -21,19 +21,6 @@ function* fetchMovieDetailById(action: PayloadAction<number>) {
 			throw Error(err.message);
 		}
 	}
-}
-
-function* fetchMovieVideosById(action: PayloadAction<number>) {
-	try {
-		const response: AxiosResponse<TResponseMovieVideos> = yield call(
-			axiosClient.get,
-			`/movie/${action.payload}/videos`,
-		);
-		const { results } = response.data;
-		const [firstTrailer] = results;
-
-		yield put(setOneMovieVideoKey(firstTrailer.key));
-	} catch (err) {}
 }
 
 function* fetchListMovies() {
@@ -107,10 +94,6 @@ function* fetchListMovies() {
 
 export function* getMovieDetailById() {
 	yield takeEvery(SagaActions.GET_DETAIL_MOVIE_BY_ID, fetchMovieDetailById);
-}
-
-export function* getMovieVideoById() {
-	yield takeEvery(SagaActions.GET_VIDEO_MOVIE_BY_ID, fetchMovieVideosById);
 }
 
 export function* getListMovies() {

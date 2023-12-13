@@ -15,7 +15,7 @@ function MovieGenres(props: TMovieGenres) {
 					<div className="col-span-full w-full">
 						<div className="flex justify-between items-end">
 							<span className="text-2xl text-orange-300">{props.genre}</span>
-							<Link to={'/'}>Xem tất cả</Link>
+							<Link to={`/genres/${props.genre}`}>Xem tất cả</Link>
 						</div>
 						<hr className="mb-5 mt-2 h-0.5 border-t-0 bg-neutral-100 opacity-100" />
 					</div>

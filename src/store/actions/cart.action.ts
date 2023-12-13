@@ -2,7 +2,7 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
-import { setListMovieInCart, setRemoveMovieById } from '@/store/reducers/cart.reducer';
+import { setListMovieInCart, setRemoveMovieById, setTotalMovieInCart } from '@/store/reducers/cart.reducer';
 import { EStatusWatchlist } from '@/enums';
 import { SagaActions } from '@/enums/saga.enum';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -64,6 +64,7 @@ function* addWatchListByMovieId(action: PayloadAction<number>) {
 
 		if (status_code === EStatusWatchlist.ADDED || status_code === EStatusWatchlist.UPDATED) {
 			yield put(setMovieIsInCartById(action.payload));
+			// yield put();
 		}
 	} catch (err: unknown) {
 		if (err instanceof AxiosError) {

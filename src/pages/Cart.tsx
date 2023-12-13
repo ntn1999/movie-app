@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/store';
+import { Button } from '@/components/atoms';
 import { ProductCart } from '@/components/molecules';
 import { SagaActions } from '@/enums/saga.enum';
 
@@ -18,8 +19,21 @@ function Cart() {
 	 * REMOVE MOVIE IN WATCH LIST BY MOVIE ID
 	 * @param movie_id - id of movie for remove
 	 */
-	const handleRemoveMovie = async (movie_id: number) => {
+	const handleRemoveMovie = (movie_id: number): void => {
 		dispatch({ type: SagaActions.REMOVE_MOVIE_BY_ID, payload: movie_id });
+	};
+
+	const handleCheckout = (): void => {
+		if (!listMovieInCart.length) window.alert('Nothing in your cart');
+		else {
+			const allowCheckout = window.confirm('Are you sure want to checkout?');
+			if (!allowCheckout) return;
+
+			// remove all movies by each movie
+			listMovieInCart.forEach((movieCart: TMovie) => {
+				dispatch({ type: SagaActions.REMOVE_MOVIE_BY_ID, payload: movieCart.id });
+			});
+		}
 	};
 
 	const subTotal = (): number => {
@@ -77,12 +91,12 @@ function Cart() {
 								</dl>
 
 								<div className="flex justify-end">
-									<a
-										href="#"
+									{/* <button
 										className="block rounded bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600"
 									>
 										Checkout
-									</a>
+									</button> */}
+									<Button text="Checkout" onClick={handleCheckout} />
 								</div>
 							</div>
 						</div>
