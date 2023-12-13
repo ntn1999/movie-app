@@ -1,6 +1,6 @@
 function Header() {
 	return (
-		<header className="z-10 bg-gray-400 sticky top-0 overflow-hidden flex items-center justify-center">
+		<header className="z-10 bg-gray-300 sticky top-0 overflow-hidden flex items-center justify-center">
 			<div className="container mx-auto px-4 py-4 flex items-center">
 				<a href="/" className="mr-auto md:w-48 flex-shrink-0">
 					<img

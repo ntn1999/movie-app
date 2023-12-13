@@ -23,17 +23,20 @@ function Trailers(props: TTrailers) {
 	}, []);
 
 	return (
-		<div className="p-10">
-			<div className="text-2xl mb-5">Trailers</div>
-			<iframe
-				width="100%"
-				height={680}
-				src={`https://www.youtube.com/embed/${videoKey}`}
-				title="YouTube video player"
-				allow=""
-				allowFullScreen
-			></iframe>
-		</div>
+		<>
+			<div className="text-2xl mb-5 mt-10">Trailers</div>
+			<div className="relative overflow-hidden w-full" style={{ paddingTop: '56.35%' }}>
+				<iframe
+					className="absolute top-0 left-0 bottom-0 right-0 w-full h-full"
+					width="100%"
+					height="1000px"
+					src={`https://www.youtube.com/embed/${videoKey}`}
+					title="YouTube video player"
+					allow=""
+					allowFullScreen
+				></iframe>
+			</div>
+		</>
 	);
 }
 

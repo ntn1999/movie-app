@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import axiosClient from '@/api/axios.client';
-import { Button, Badge, Trailers } from '@/components/atoms';
+import { Button, Badge, Trailers, Loading } from '@/components/atoms';
 import { CharacterInfo } from '@/components/molecules';
 import { SagaActions } from '@/enums/saga.enum';
 import { scrollToTop } from '@/utils';
 
 function Movie() {
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isInCart, setIsInCart] = useState<boolean>(false);
 	const [movieDetail, setMovieDetail] = useState<TMovieDetail>({} as TMovieDetail);
 	const dispatch = useDispatch();
@@ -17,7 +18,7 @@ function Movie() {
 
 	const director: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Producer');
 	const writer: TCrew | undefined = movieDetail.credits?.crew.find((crew: TCrew) => crew.job === 'Writer');
-	const country = movieDetail.production_countries
+	const country: string[] = movieDetail.production_countries
 		?.map((country) => country.name)
 		.toString()
 		.split(` , `);
@@ -39,6 +40,7 @@ function Movie() {
 				);
 				const { results } = responseWatchlist.data;
 
+				// check if this movie is existed in cart
 				results.forEach((movie: TMovie) => {
 					if (movie.id === data.id) setIsInCart(true);
 				});
@@ -47,14 +49,18 @@ function Movie() {
 				if (err instanceof AxiosError) {
 					window.alert(err.message);
 				}
+			} finally {
+				setIsLoading(false);
 			}
 		})();
 	}, []);
 
 	const handleAddToCart = async () => {
-		setIsInCart(true);
 		dispatch({ type: SagaActions.ADD_MOVIE_BY_ID, payload: movie_id });
+		setIsInCart(true);
 	};
+
+	if (isLoading) return <Loading />;
 
 	return (
 		<>
@@ -77,7 +83,7 @@ function Movie() {
 					<div className="movie-detail__right-title">{movieDetail.original_title}</div>
 					<div className="movie-detail__right-rating">
 						<span className="imdb">IMDB</span>
-						<span className="vote">{movieDetail.vote_average}</span>
+						<span className="vote">{movieDetail.vote_average.toFixed(1)}</span>
 					</div>
 					<span className="movie-detail__right-category">
 						{movieDetail.genres?.map((genre: TGenres, index: number) => (
