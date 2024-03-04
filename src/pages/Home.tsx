@@ -9,7 +9,7 @@ function Home() {
 	const dispatch = useDispatch();
 	const { listMovieByGenres } = useSelector((state: RootState) => state.movie);
 
-	// default input
+	// default input movie app
 	useEffect(() => {
 		dispatch({ type: SagaActions.GET_LIST_MOVIES });
 	}, []);
